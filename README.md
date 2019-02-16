@@ -10,7 +10,7 @@ n/a
 
 ## The Team
 
-Kevin He
-Chris Choy
-April Wang
-Dawson Whitehead
+Kevin He  
+Chris Choy  
+April Wang  
+Dawson Whitehead  
