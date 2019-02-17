@@ -144,10 +144,10 @@ class PPEXE(object):
         self.api.reg_write(dst, val)
 
     def store(self,src,dst):
-        if self.is_int(src):  # cond handled by wiring
-            dst_val = int(src)
+        if self.is_int(dst):  # cond handled by wiring
+            dst_val = int(dst)
         else:
-            dst_val = self.api.reg_read(src)
+            dst_val = self.api.reg_read(dst)
 
         val = self.api.reg_read(src)
         self.api.mem_write(dst_val, val)
@@ -155,36 +155,36 @@ class PPEXE(object):
     def eq(self, dst, src):
         self.sub(dst, src)
         cond = self.api.reg_read(self._isz_bit)
-        self.mov(dst, cond)
+        self.mov(self._isz_bit, cond)
 
     def ne(self, dst, src):
         self.sub(dst, src)
         cond = not self.api.reg_read(self._isz_bit)
-        self.mov(dst, cond)
+        self.mov(self._isz_bit, cond)
 
     def lt(self, dst, src):
         self.sub(dst, src)
         cond = not self.api.reg_read(self._isz_bit) and \
                self.api.reg_read(self._ovr_bit)
-        self.mov(dst, cond)
+        self.mov(self._isz_bit, cond)
 
     def gt(self, dst, src):
         self.sub(dst, src)
         cond = not self.api.reg_read(self._isz_bit) and \
                not self.api.reg_read(self._ovr_bit)
-        self.mov(dst, cond)
+        self.mov(self._isz_bit, cond)
 
     def le(self, dst, src):
         self.sub(dst, src)
         cond = self.api.reg_read(self._isz_bit) or \
                self.api.reg_read(self._ovr_bit)
-        self.mov(dst, cond)
+        self.mov(self._isz_bit, cond)
 
     def ge(self, dst, src):
         self.sub(dst, src)
         cond = self.api.reg_read(self._isz_bit) or \
                not self.api.reg_read(self._ovr_bit)
-        self.mov(dst, cond)
+        self.mov(self._isz_bit, cond)
 
     def jmp(self, jmp):
         self.api.update_instr_ptr(jmp)
@@ -192,37 +192,37 @@ class PPEXE(object):
     def jeq(self, jmp, dst, src):
         self.eq(dst, src)
 
-        if self.api.reg_read(dst):
+        if self.api.reg_read(self._isz_bit):
             self.jmp(jmp)
 
     def jne(self, jmp, dst, src):
         self.ne(dst, src)
 
-        if self.api.reg_read(dst):
+        if self.api.reg_read(self._isz_bit):
             self.jmp(jmp)
 
     def jlt(self, jmp, dst, src):
         self.lt(dst, src)
 
-        if self.api.reg_read(dst):
+        if self.api.reg_read(self._isz_bit):
             self.jmp(jmp)
 
     def jgt(self, jmp, dst, src):
         self.gt(dst, src)
 
-        if self.api.reg_read(dst):
+        if self.api.reg_read(self._isz_bit):
             self.jmp(jmp)
 
     def jle(self, jmp, dst, src):
         self.le(dst, src)
 
-        if self.api.reg_read(dst):
+        if self.api.reg_read(self._isz_bit):
             self.jmp(jmp)
 
     def jge(self, jmp, dst, src):
         self.ge(dst, src)
 
-        if self.api.reg_read(dst):
+        if self.api.reg_read(self._isz_bit):
             self.jmp(jmp)
 
 

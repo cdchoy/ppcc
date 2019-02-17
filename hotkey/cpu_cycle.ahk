@@ -387,6 +387,7 @@ Loop {
         Click
     }
 
+    sleep 100 
 
     if (Clicked == 0) {
         Break

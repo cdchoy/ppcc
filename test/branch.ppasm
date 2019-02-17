@@ -1,7 +1,7 @@
-0		mov C, 4
-1		store C, 1
-2		load A, C
-3		sub A, 2
-4		store A, C
-5		jeq 2, D, 4
-6		mov D, SP
+0		mov A, 5
+1		mov B, 0
+2		add A, 3
+3		add B, 1
+4		jne 0, B, 5
+5		store A, 8
+6		load D, 8
