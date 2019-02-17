@@ -5,7 +5,7 @@
 
 import sys  # only for sys.exit()
 import win32com.client
-from ppapi import PPAPI
+from ppsuite.ppapi import PPAPI
 
 # Stretch Goal Ops:
 #     putc src
