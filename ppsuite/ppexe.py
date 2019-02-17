@@ -278,7 +278,7 @@ if __name__ == "__main__":
     ppt = Application.ActivePresentation
 
     w = WindowMgr()
-    w.find_window_wildcard(".*PPCPU.*", True)
+    w.find_window_wildcard(".*PPCPU.*")
     w.set_foreground()
 
     ppt.SlideShowSettings.Run.View.AcceleratorsEnabled = False
