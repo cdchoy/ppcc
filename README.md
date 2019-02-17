@@ -11,11 +11,11 @@ At Carnegie Mellon's 11th annual SIGBOVIK in 2017, Tom Wildenhain unveiled the [
 
 And so in 2019, we are proud to introduce the PPSuite, a collection of software engineered to greatly improve your Powerpoint programming experience.
 
-* PPCPU: a cpu built on Turing Machines that function entirely in Powerpoint. This includes 256 bytes of memory, 8 registers, an instruction code stack, and several Arithmetic Logic Units implemented on Turing Machines.  
+* PPCPU: a cpu built on Turing Machines that function entirely in Powerpoint. This includes 256 bytes of memory, 8 registers, an instruction code heap, and several Arithmetic Logic Units implemented on Turing Machines.  
 
 * PPAPI: a collection of functions for interfacing with Powerpoint and our PPTXTMs
 
-* PPCC: a compiler that will convert a .c file to a .ppasm file
+* PPCC: a compiler that will convert a .c file to a .ppasm file, out own ASM format
 
 * PPEXE: an executor to handle read/writes as well as instruction decoding, loading, and execution. All meaningful computation and storage is still performed on PPCPU.
 
