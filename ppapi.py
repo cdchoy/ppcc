@@ -2,15 +2,16 @@ import subprocess
 import win32com.client
 
 class PPAPI:
-    def __init__(self, pres, init_mem_reg=True):
+    def __init__(self, pres):
         self.pres = pres
 
         self.SLIDE_MEM_0 = 1
         self.SLIDE_MEM_1 = 2
         self.SLIDE_REG = 3
         self.INSTR_CACHE = 4
+        self.NUM_TURING_SLIDES = 3 #Chane this
 
-        if (init_mem_reg == True):
+        if self.pres.Slides.Count == self.NUM_TURING_SLIDES:
             self.init_mem()
             self.init_register()
             self.init_inst_cache()
@@ -35,11 +36,12 @@ class PPAPI:
 
         with open(file_path, 'r') as f:
             for asm_line in f:
-                instr_cache_slide.Shapes.AddTextbox(Orientation=0x1,
-                                                    Left=100,
-                                                    Top=20 * shape_num,
-                                                    Width=300,
-                                                    Height=30)
+                if instr_cache_slide.Shapes.Count < shape_num:
+                    instr_cache_slide.Shapes.AddTextbox(Orientation=0x1,
+                                                        Left=100,
+                                                        Top=20 * shape_num,
+                                                        Width=300,
+                                                        Height=30)
                 instr_cache_slide.Shapes(shape_num).TextFrame.TextRange.Text = asm_line.split('\t')[2]
                 shape_num += 1
 
