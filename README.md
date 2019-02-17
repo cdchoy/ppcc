@@ -24,7 +24,7 @@ And so in 2019, we are proud to introduce the PPSuite, a collection of software 
 ## Motivations
 
 * no one tried to stop us
-* never stopped to consider if we *should*
+* strong desire to reinvent the wheel but worse
 * good memes
 
 ## The Team
