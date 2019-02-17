@@ -136,14 +136,28 @@ class PPEXE(object):
         val = self.api.reg_read(src)
         self.api.mem_write(dst_val, val)
 
-    def exit(self):
-        sys.exit(0)
-
     def execute(self):
         ''' Execute commands until end of ppasm instruction list '''
 
         while (1):      # todo: sad loop :(
             instr = self.api.get_next_instr()
+            args = instr.split(' ')
+
+            # Dispatch Table
+            if args[0] == 'mov':
+                self.mov(args[1][:-1], args[2])
+            elif args[0] == 'add':
+                self.add(args[1][:-1], args[2])
+            elif args[0] == 'sub':
+                self.sub(args[1][:-1], args[2])
+            elif args[0] == 'load':
+                self.load(args[1][:-1], args[2])
+            elif args[0] == 'store':
+                self.store(args[1][:-1], args[2])
+            elif args[0] == 'exit':
+                break
+
+        # todo: read from stdout buffer
         return
 
 if __name__ == "__main__":
