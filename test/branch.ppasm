@@ -5,3 +5,4 @@
 4		jne 0, B, 5
 5		store A, 8
 6		load D, 8
+7		exit

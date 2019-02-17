@@ -153,35 +153,65 @@ class PPEXE(object):
         self.api.mem_write(dst_val, val)
 
     def eq(self, dst, src):
+        tmp = self.api.reg_read(dst)
+        self.api.reg_write("TMP", tmp)
         self.sub(dst, src)
+        tmp = self.api.reg_read("TMP")
+        self.api.reg_write(dst, tmp)
+
         cond = self.api.reg_read(self._isz_bit)
         self.mov(self._isz_bit, cond)
 
     def ne(self, dst, src):
+        tmp = self.api.reg_read(dst)
+        self.api.reg_write("TMP", tmp)
         self.sub(dst, src)
+        tmp = self.api.reg_read("TMP")
+        self.api.reg_write(dst, tmp)
+        
         cond = not self.api.reg_read(self._isz_bit)
         self.mov(self._isz_bit, cond)
 
     def lt(self, dst, src):
+        tmp = self.api.reg_read(dst)
+        self.api.reg_write("TMP", tmp)
         self.sub(dst, src)
+        tmp = self.api.reg_read("TMP")
+        self.api.reg_write(dst, tmp)
+        
         cond = not self.api.reg_read(self._isz_bit) and \
                self.api.reg_read(self._ovr_bit)
         self.mov(self._isz_bit, cond)
 
     def gt(self, dst, src):
+        tmp = self.api.reg_read(dst)
+        self.api.reg_write("TMP", tmp)
         self.sub(dst, src)
+        tmp = self.api.reg_read("TMP")
+        self.api.reg_write(dst, tmp)
+        
         cond = not self.api.reg_read(self._isz_bit) and \
                not self.api.reg_read(self._ovr_bit)
         self.mov(self._isz_bit, cond)
 
     def le(self, dst, src):
+        tmp = self.api.reg_read(dst)
+        self.api.reg_write("TMP", tmp)
         self.sub(dst, src)
+        tmp = self.api.reg_read("TMP")
+        self.api.reg_write(dst, tmp)
+        
         cond = self.api.reg_read(self._isz_bit) or \
                self.api.reg_read(self._ovr_bit)
         self.mov(self._isz_bit, cond)
 
     def ge(self, dst, src):
+        tmp = self.api.reg_read(dst)
+        self.api.reg_write("TMP", tmp)
         self.sub(dst, src)
+        tmp = self.api.reg_read("TMP")
+        self.api.reg_write(dst, tmp)
+        
         cond = self.api.reg_read(self._isz_bit) or \
                not self.api.reg_read(self._ovr_bit)
         self.mov(self._isz_bit, cond)

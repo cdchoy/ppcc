@@ -25,7 +25,8 @@ class PPAPI:
             "SP": 4,
             "BP": 5,
             "OVR": 6,
-            "ISZ": 7
+            "ISZ": 7,
+            "TMP": 8
         }
 
         if self.pres.Slides.Count == self.NUM_TURING_SLIDES:
@@ -99,7 +100,7 @@ class PPAPI:
         self.pres.SlideShowWindow.View.GoToSlide(self.REG)
         time.sleep(.25)
 
-        for reg_num in range(1, 9):
+        for reg_num in range(1, 10):
             slide.Shapes.AddTextbox(Orientation=0x1,
                                     Left=100,
                                     Top=50 * reg_num,
