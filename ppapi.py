@@ -120,9 +120,9 @@ class PPAPI:
                                     Height=20)
 
             textframe_0 = slide_0.Shapes(reg_num).TextFrame
-            textframe_0.TextRange.Text = "{}: 0".format(hex(reg_num - 1))
+            textframe_0.TextRange.Text = "{}: {}".format(hex(reg_num - 1), hex(0))
             textframe_1 = slide_1.Shapes(reg_num).TextFrame
-            textframe_1.TextRange.Text = "{}: 0".format(hex(reg_num - 1 + 128))
+            textframe_1.TextRange.Text = "{}: {}".format(hex(reg_num - 1 + 128), hex(0))
 
     # Writes a val to mem
     def mem_write(self, mem_loc, val):
@@ -145,7 +145,7 @@ class PPAPI:
         slide = self.pres.Slides(slide)
         textframe = slide.Shapes(mem_loc_real + 1).TextFrame
 
-        textframe.TextRange.Text = "{}: {}".format(hex(mem_loc), val)
+        textframe.TextRange.Text = "{}: {}".format(hex(mem_loc), hex(int(str(val), 2)))
 
     # Reads a val from mem
     def mem_read(self, mem_loc):
@@ -169,7 +169,10 @@ class PPAPI:
         textframe = slide.Shapes(mem_loc_real + 1).TextFrame
 
         strip_len = len(hex(mem_loc)) + 2
-        val = int(textframe.TextRange.Text[strip_len:])
+        # lol don't store data as hex strings
+        val = int(str(bin(int(textframe.TextRange.Text[strip_len:], 16)))[2:])
+
+        print(val)
 
         return val
 
