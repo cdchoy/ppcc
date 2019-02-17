@@ -4,135 +4,148 @@ import win32com.client
 REG_SLIDE = 2
 MEM_SLIDE_0 = 3
 
-# Initializes the register page
-def init_register(pres):
-    pres.Slides.Add(REG_SLIDE, 12)
+class PPAPI:
 
-    slide = pres.Slides(REG_SLIDE)
+    def __init__(self, pres, init_mem_reg=True):
+        self.pres = pres
 
-    for reg_num in range(1, 9):
-        slide.Shapes.AddTextbox(Orientation=0x1,
-                                Left=100,
-                                Top=50 * reg_num,
-                                Width=300,
-                                Height=30)
+        self.SLIDE_MEM_0 = 1
+        self.SLIDE_MEM_1 = 2
+        self.SLIDE_REG = 3
 
-        textframe = slide.Shapes(reg_num).TextFrame
-        textframe.TextRange.Text = "X{}: 0".format(reg_num - 1)
+        if (init_mem_reg == True):
+            self.init_mem()
+            self.init_register()
 
-# Writes a val to a register
-def reg_write(pres, reg_num, val):
-    slide = pres.Slides(REG_SLIDE)
-    textframe = slide.Shapes(reg_num + 1).TextFrame
+    # Initializes the register page
+    def init_register(self):
+        self.pres.Slides.Add(self.SLIDE_REG, 12)
 
-    textframe.TextRange.Text = "X{}: {}".format(reg_num,val)
+        slide = self.pres.Slides(self.SLIDE_REG)
 
-# Reads a val from a register
-def reg_read(pres, reg_num):
-    slide = pres.Slides(REG_SLIDE)
-    textframe = slide.Shapes(reg_num + 1).TextFrame
+        for reg_num in range(1, 9):
+            slide.Shapes.AddTextbox(Orientation=0x1,
+                                    Left=100,
+                                    Top=50 * reg_num,
+                                    Width=300,
+                                    Height=30)
 
-    val = int(textframe.TextRange.Text[4:])
+            textframe = slide.Shapes(reg_num).TextFrame
+            textframe.TextRange.Text = "X{}: 0".format(reg_num - 1)
 
-    return val
+    # Writes a val to a register
+    def reg_write(self, reg_num, val):
+        slide = self.pres.Slides(self.SLIDE_REG)
+        textframe = slide.Shapes(reg_num + 1).TextFrame
 
-# Initializes the memory page
-def init_mem(pres):
-    pres.Slides.Add(MEM_SLIDE_0, 12)
-    pres.Slides.Add(MEM_SLIDE_0 + 1, 12)
-    slide_0 = pres.Slides(MEM_SLIDE_0)
-    slide_1 = pres.Slides(MEM_SLIDE_0 + 1)
+        textframe.TextRange.Text = "X{}: {}".format(reg_num,val)
 
-    for reg_num in range(1, 129):
-        x = 100 + ((reg_num - 1) % 16) * 50
-        y = 50 + 50 * ((reg_num - 1) // 16)
+    # Reads a val from a register
+    def reg_read(self, reg_num):
+        slide = self.pres.Slides(self.SLIDE_REG)
+        textframe = slide.Shapes(reg_num + 1).TextFrame
 
-        slide_0.Shapes.AddTextbox(Orientation=0x1,
-                                  Left=x,
-                                  Top=y,
-                                  Width=60,
-                                  Height=20)
+        val = int(textframe.TextRange.Text[4:])
 
-        slide_1.Shapes.AddTextbox(Orientation=0x1,
-                                  Left=x,
-                                  Top=y,
-                                  Width=60,
-                                  Height=20)
+        return val
 
-        textframe_0 = slide_0.Shapes(reg_num).TextFrame
-        textframe_0.TextRange.Text = "{}: 0".format(hex(reg_num - 1))
-        textframe_1 = slide_1.Shapes(reg_num).TextFrame
-        textframe_1.TextRange.Text = "{}: 0".format(hex(reg_num - 1 + 128))
+    # Initializes the memory page
+    def init_mem(self):
+        self.pres.Slides.Add(self.SLIDE_MEM_0, 12)
+        self.pres.Slides.Add(self.SLIDE_MEM_1, 12)
+        slide_0 = self.pres.Slides(self.SLIDE_MEM_0)
+        slide_1 = self.pres.Slides(self.SLIDE_MEM_1)
 
-# Writes a val to mem
-def mem_write(pres, mem_loc, val):
-    slide_num = mem_loc // 128 + MEM_SLIDE_0
-    mem_loc_real = mem_loc
+        for reg_num in range(1, 129):
+            x = 100 + ((reg_num - 1) % 16) * 50
+            y = 50 + 50 * ((reg_num - 1) // 16)
 
-    if mem_loc > 127:
-        mem_loc_real = mem_loc - 128
+            slide_0.Shapes.AddTextbox(Orientation=0x1,
+                                    Left=x,
+                                    Top=y,
+                                    Width=60,
+                                    Height=20)
 
-    slide = pres.Slides(slide_num)
-    textframe = slide.Shapes(mem_loc_real + 1).TextFrame
+            slide_1.Shapes.AddTextbox(Orientation=0x1,
+                                    Left=x,
+                                    Top=y,
+                                    Width=60,
+                                    Height=20)
 
-    textframe.TextRange.Text = "{}: {}".format(hex(mem_loc), val)
+            textframe_0 = slide_0.Shapes(reg_num).TextFrame
+            textframe_0.TextRange.Text = "{}: 0".format(hex(reg_num - 1))
+            textframe_1 = slide_1.Shapes(reg_num).TextFrame
+            textframe_1.TextRange.Text = "{}: 0".format(hex(reg_num - 1 + 128))
 
-# Reads a val from mem
-def mem_read(pres, mem_loc):
-    slide_num = mem_loc // 128 + MEM_SLIDE_0
-    mem_loc_real = mem_loc
+    # Writes a val to mem
+    def mem_write(self, mem_loc, val):
+        overflow = mem_loc // 128
 
-    if mem_loc > 127:
-        mem_loc_real = mem_loc - 128
+        if overflow == 0:
+            slide = self.SLIDE_MEM_0
+        elif overflow == 1:
+            slide = self.SLIDE_MEM_1
+        else:
+            slide = self.SLIDE_MEM_1
 
-    slide = pres.Slides(slide_num)
-    textframe = slide.Shapes(mem_loc_real + 1).TextFrame
+        mem_loc_real = mem_loc
 
-    strip_len = len(hex(mem_loc)) + 2
-    val = int(textframe.TextRange.Text[strip_len:])
+        if mem_loc > 127:
+            mem_loc_real = mem_loc - 128
 
-    return val
+        slide = self.pres.Slides(slide)
+        textframe = slide.Shapes(mem_loc_real + 1).TextFrame
 
-def tape_write_raw(pres, tape_loc, val):
-    pres.SlideShowWindow.View.GoToSlide(tape_loc)
+        textframe.TextRange.Text = "{}: {}".format(hex(mem_loc), val)
 
-    lst = list(val)
-    args = ["C:/Program Files/AutoHotkey/AutoHotkeyU64.exe", 
-            "hotkey/tape_write.ahk"]
-    args += lst
+    # Reads a val from mem
+    def mem_read(self, mem_loc):
+        overflow = mem_loc // 128
 
-    ahk = subprocess.Popen(args, stdout=subprocess.PIPE)
-    out = ahk.stdout.read().decode()
-    ahk.wait()
+        if overflow == 0:
+            slide = self.SLIDE_MEM_0
+        elif overflow == 1:
+            slide = self.SLIDE_MEM_1
+        else:
+            slide = self.SLIDE_MEM_1
+        
+        mem_loc_real = mem_loc
 
-# Reads a tape and returns its raw output
-def tape_read_raw(pres):
-    ahk = subprocess.Popen(["C:/Program Files/AutoHotkey/AutoHotkeyU64.exe", 
-                            "hotkey/tape_read.ahk"], stdout=subprocess.PIPE)
+        if mem_loc > 127:
+            mem_loc_real = mem_loc - 128
 
-    ahk.wait()
-    out = ahk.stdout.read().decode()
+        slide = self.pres.Slides(slide)
+        textframe = slide.Shapes(mem_loc_real + 1).TextFrame
 
-    return out
+        strip_len = len(hex(mem_loc)) + 2
+        val = int(textframe.TextRange.Text[strip_len:])
+
+        return val
+
+    def tape_write_raw(self, tape_loc, val):
+        self.pres.SlideShowWindow.View.GoToSlide(tape_loc)
+
+        lst = list(val)
+        args = ["C:/Program Files/AutoHotkey/AutoHotkeyU64.exe", 
+                "hotkey/tape_write.ahk"]
+        args += lst
+
+        ahk = subprocess.Popen(args, stdout=subprocess.PIPE)
+        ahk.wait()
+
+    # Reads a tape and returns its raw output
+    def tape_read_raw(self):
+        ahk = subprocess.Popen(["C:/Program Files/AutoHotkey/AutoHotkeyU64.exe", 
+                                "hotkey/tape_read.ahk"], stdout=subprocess.PIPE)
+
+        ahk.wait()
+        out = ahk.stdout.read().decode()
+
+        return out
 
 if __name__ == "__main__":
     Application = win32com.client.Dispatch("PowerPoint.Application")
     Application.Visible = True
     pres = Application.ActivePresentation
-    # win = pres.SlideShowWindow.View.GoToSlide(1)
 
-    # pres.Slides(1).Shapes(1).TextFrame.TextRange.Text = "BBBBBBBBBBBBBB"
-
-    
-    # init_register(pres)
-    # reg_write(pres, 2, 4)
-    # print(reg_read(pres, 2))
-
-    # init_mem(pres)
-
-    # for i in range(0, 256):
-    #     mem_write(pres, i, i + 3)
-    #     print(mem_read(pres, i))
-
-    tape_write_raw(pres, 1, "01010101")
-    tape_read_raw(pres)
+    api = PPAPI(pres)
