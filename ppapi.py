@@ -1,9 +1,6 @@
 import subprocess
 import win32com.client
 
-REG_SLIDE = 2
-MEM_SLIDE_0 = 3
-
 class PPAPI:
 
     def __init__(self, pres, init_mem_reg=True):
@@ -108,7 +105,7 @@ class PPAPI:
             slide = self.SLIDE_MEM_1
         else:
             slide = self.SLIDE_MEM_1
-        
+
         mem_loc_real = mem_loc
 
         if mem_loc > 127:
@@ -126,7 +123,7 @@ class PPAPI:
         self.pres.SlideShowWindow.View.GoToSlide(tape_loc)
 
         lst = list(val)
-        args = ["C:/Program Files/AutoHotkey/AutoHotkeyU64.exe", 
+        args = ["C:/Program Files/AutoHotkey/AutoHotkeyU64.exe",
                 "hotkey/tape_write.ahk"]
         args += lst
 
@@ -135,7 +132,7 @@ class PPAPI:
 
     # Reads a tape and returns its raw output
     def tape_read_raw(self):
-        ahk = subprocess.Popen(["C:/Program Files/AutoHotkey/AutoHotkeyU64.exe", 
+        ahk = subprocess.Popen(["C:/Program Files/AutoHotkey/AutoHotkeyU64.exe",
                                 "hotkey/tape_read.ahk"], stdout=subprocess.PIPE)
 
         ahk.wait()
