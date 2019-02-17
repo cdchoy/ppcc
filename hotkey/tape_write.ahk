@@ -1,9 +1,10 @@
 ; Writes a series of values to a tape
 ; These must be passed in as separate command line args
-sleep 10000
+
+sleep 2000
 
 loop %0% {
-    Sleep 500
+    Sleep 800
 
     i := A_Args[A_Index]
 
@@ -35,8 +36,9 @@ loop %0% {
 }
 
 Loop, 8 {
+    sleep 100
 
     ; Move to prev cell
-    MouseMove, 853, 610, 0
+    MouseMove, 895, 610, 0
     Click
 }
