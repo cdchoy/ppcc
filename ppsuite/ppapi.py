@@ -136,24 +136,26 @@ class PPAPI:
         self.pres.SlideShowWindow.View.GoToSlide(self.MEM_0)
 
         for reg_num in range(1, 129):
-            x = 100 + ((reg_num - 1) % 16) * 50
-            y = 50 + 50 * ((reg_num - 1) // 16)
+            x = 15 + ((reg_num - 1) % 16) * 42
+            y = 30 + 57 * ((reg_num - 1) // 16)
 
             slide_0.Shapes.AddTextbox(Orientation=0x1,
                                     Left=x,
                                     Top=y,
-                                    Width=60,
-                                    Height=20)
+                                    Width=45,
+                                    Height=18)
 
             slide_1.Shapes.AddTextbox(Orientation=0x1,
                                     Left=x,
                                     Top=y,
-                                    Width=60,
-                                    Height=20)
+                                    Width=45,
+                                    Height=18)
 
             textframe_0 = slide_0.Shapes(reg_num).TextFrame
+            textframe_0.TextRange.Font.Size = 10
             textframe_0.TextRange.Text = "{}: {}".format(hex(reg_num - 1), hex(0))
             textframe_1 = slide_1.Shapes(reg_num).TextFrame
+            textframe_1.TextRange.Font.Size = 10
             textframe_1.TextRange.Text = "{}: {}".format(hex(reg_num - 1 + 128), hex(0))
 
     # Writes a val to mem
