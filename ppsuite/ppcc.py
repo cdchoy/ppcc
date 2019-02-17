@@ -78,7 +78,7 @@ class PPCC:
                     nf.write(' '.join(line_elems).rstrip('\n'))
                     nf.write('\n')
                     line_num += 1
-        # os.remove(compiled_file)
+        os.remove(compiled_file)
 
     def compile(self):
         if (os.getcwd().split('/')[-1] != 'ppsuite'):

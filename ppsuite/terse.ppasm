@@ -1,0 +1,16 @@
+0		mov D, SP
+1		sub D, 1
+2		store BP, D
+3		mov SP, D
+4		mov BP, SP
+5		mov A, 5
+6		mov D, SP
+7		sub D, 1
+8		store A, D
+9		mov SP, D
+10		mov A, 3
+11		mov B, A
+12		load A, SP
+13		add SP, 1
+14		add A, B
+15		exit
