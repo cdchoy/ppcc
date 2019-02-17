@@ -1,6 +1,5 @@
 import subprocess
 import win32com.client  # todo rm. pres is initialized in ppexe
-import time
 
 class PPAPI:
     def __init__(self, pres):
@@ -226,8 +225,6 @@ if __name__ == "__main__":
     Application = win32com.client.Dispatch("PowerPoint.Application")
     Application.Visible = True
     pres = Application.ActivePresentation
-
-    time.sleep(5)
 
     api = PPAPI(pres)
     # api.load_ppasm("./ppasm/test.ppasm")
