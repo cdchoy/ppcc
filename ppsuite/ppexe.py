@@ -281,7 +281,7 @@ if __name__ == "__main__":
     w.find_window_wildcard(".*PPCPU.*")
     w.set_foreground()
 
-    ppt.SlideShowSettings.Run.View.AcceleratorsEnabled = False
+    ppt.SlideShowSettings.Run().View.AcceleratorsEnabled = False
 
     if len(sys.argv) != 2:
         print("USAGE: $ python3 ppexe.py [.ppasm file]")
