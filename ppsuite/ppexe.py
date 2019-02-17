@@ -136,6 +136,9 @@ class PPEXE(object):
         val = self.api.reg_read(src)
         self.api.mem_write(dst_val, val)
 
+    def jmp(jmp):
+        self.api.update_instr_ptr(jmp)
+
     def execute(self):
         ''' Execute commands until end of ppasm instruction list '''
 
@@ -154,6 +157,8 @@ class PPEXE(object):
                 self.load(args[1][:-1], args[2])
             elif args[0] == 'store':
                 self.store(args[1][:-1], args[2])
+            elif args[0] == 'jmp':
+                self.jmp(args[1])
             elif args[0] == 'exit':
                 break
 
