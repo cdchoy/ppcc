@@ -1,4 +1,5 @@
 import subprocess
+import time
 import win32com.client  # todo rm. pres is initialized in ppexe
 
 class PPAPI:
@@ -73,6 +74,9 @@ class PPAPI:
 
     #returns next instr
     def get_next_instr(self):
+        self.pres.SlideShowWindow.View.GoToSlide(self.INSTR_CACHE)
+        time.sleep(.5)
+
         instr_cache_slide = self.pres.Slides(self.INSTR_CACHE)
         ip_num = int(instr_cache_slide.Shapes(1).TextFrame.TextRange.Text)
         instr_cache_slide.Shapes(1).TextFrame.TextRange.Text = str(ip_num + 1)
@@ -81,6 +85,9 @@ class PPAPI:
 
     #updates instruction counter
     def update_instr_ptr(self, new_num):
+        self.pres.SlideShowWindow.View.GoToSlide(self.INSTR_CACHE)
+        time.sleep(.5)
+
         instr_cache_slide = self.pres.Slides(self.INSTR_CACHE)
         instr_cache_slide.Shapes(1).TextFrame.TextRange.Text = str(int(new_num) + 1)
 
@@ -90,6 +97,7 @@ class PPAPI:
 
         slide = self.pres.Slides(self.REG)
         self.pres.SlideShowWindow.View.GoToSlide(self.REG)
+        time.sleep(.25)
 
         for reg_num in range(1, 9):
             slide.Shapes.AddTextbox(Orientation=0x1,
@@ -110,6 +118,7 @@ class PPAPI:
         reg_num = self.reg_table[reg_name]
 
         self.pres.SlideShowWindow.View.GoToSlide(self.REG)
+        time.sleep(.25)
 
         slide = self.pres.Slides(self.REG)
         textframe = slide.Shapes(reg_num + 1).TextFrame
@@ -123,6 +132,7 @@ class PPAPI:
         reg_num = self.reg_table[reg_name]
 
         self.pres.SlideShowWindow.View.GoToSlide(self.REG)
+        time.sleep(.25)
 
         slide = self.pres.Slides(self.REG)
         textframe = slide.Shapes(reg_num + 1).TextFrame
@@ -137,6 +147,7 @@ class PPAPI:
         slide_0 = self.pres.Slides(self.MEM_0)
         slide_1 = self.pres.Slides(self.MEM_1)
         self.pres.SlideShowWindow.View.GoToSlide(self.MEM_0)
+        time.sleep(.5)
 
         for reg_num in range(1, 129):
             x = 15 + ((reg_num - 1) % 16) * 42
@@ -173,6 +184,7 @@ class PPAPI:
             slide = self.MEM_1
 
         self.pres.SlideShowWindow.View.GoToSlide(slide)
+        time.sleep(.5)
 
         mem_loc_real = mem_loc
 
@@ -196,6 +208,7 @@ class PPAPI:
             slide = self.MEM_1
 
         self.pres.SlideShowWindow.View.GoToSlide(slide)
+        time.sleep(.5)
 
         mem_loc_real = mem_loc
 
