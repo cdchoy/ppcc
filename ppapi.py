@@ -47,9 +47,12 @@ class PPAPI:
                 shape_num += 1
 
     #returns next instr
-    def get_next_instr(instr_num):
+    def get_next_instr():
         instr_cache_slide = self.pres.Slides(self.INSTR_CACHE)
-        return instr_cache_slide.Shapes(instr_num + 2).TextFrame.TextRange.Text
+        ip_num = int(instr_cache_slide.Shapes(1).TextFrame.TextRange.Text)
+        instr_cache_slide.Shapes(1).TextFrame.TextRange.Text = str(ip_num + 1)
+
+        return instr_cache_slide.Shapes(ip_num).TextFrame.TextRange.Text
 
     #updates instruction counter
     def update_instr_ptr(new_num):
@@ -154,7 +157,7 @@ class PPAPI:
             slide = self.SLIDE_MEM_1
         else:
             slide = self.SLIDE_MEM_1
-        
+
         self.pres.SlideShowWindow.View.GoToSlide(slide)
 
         mem_loc_real = mem_loc
@@ -192,15 +195,15 @@ class PPAPI:
         return out
 
     def execute(self):
-        ahk_start = subprocess.Popen(["C:/Program Files/AutoHotkey/AutoHotkeyU64.exe", 
+        ahk_start = subprocess.Popen(["C:/Program Files/AutoHotkey/AutoHotkeyU64.exe",
                                       "hotkey/toggle_exec.ahk"])
         ahk_start.wait()
 
-        ahk_run = subprocess.Popen(["C:/Program Files/AutoHotkey/AutoHotkeyU64.exe", 
+        ahk_run = subprocess.Popen(["C:/Program Files/AutoHotkey/AutoHotkeyU64.exe",
                                     "hotkey/cpu_cycle.ahk"])
         ahk_run.wait()
-                                
-        ahk_teardown = subprocess.Popen(["C:/Program Files/AutoHotkey/AutoHotkeyU64.exe", 
+
+        ahk_teardown = subprocess.Popen(["C:/Program Files/AutoHotkey/AutoHotkeyU64.exe",
                                          "hotkey/toggle_exec.ahk"])
         ahk_teardown.wait()
 
@@ -219,10 +222,14 @@ if __name__ == "__main__":
 
     api = PPAPI(pres)
     api.load_ppasm("./ppasm/test.ppasm")
-    
-    api.mem_write(5, 11001111)
-    val = api.mem_read(5)
-    api.tape_write_raw(4, str(val))
-    api.execute()
-    res = api.tape_read_raw()
-    api.teardown()
+    slide = pres.Slides(5)
+    for i in range(slide.Shapes.Count):
+        print(slide.Shapes(i+1).GroupItems)
+
+
+    # api.mem_write(5, 11001111)
+    # val = api.mem_read(5)
+    # api.tape_write_raw(4, str(val))
+    # api.execute()
+    # res = api.tape_read_raw()
+    # api.teardown()
