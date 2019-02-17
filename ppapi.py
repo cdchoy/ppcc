@@ -2,21 +2,59 @@ import subprocess
 import win32com.client
 import time
 
-REG_SLIDE = 2
-MEM_SLIDE_0 = 3
-
 class PPAPI:
-
-    def __init__(self, pres, init_mem_reg=True):
+    def __init__(self, pres):
         self.pres = pres
 
         self.SLIDE_MEM_0 = 1
         self.SLIDE_MEM_1 = 2
         self.SLIDE_REG = 3
+        self.INSTR_CACHE = 4
+        self.NUM_TURING_SLIDES = 3 #Chane this
 
-        if (init_mem_reg == True):
+        if self.pres.Slides.Count == self.NUM_TURING_SLIDES:
             self.init_mem()
             self.init_register()
+            self.init_inst_cache()
+
+    #init instr cache page
+    def init_inst_cache(self):
+        self.pres.Slides.Add(self.INSTR_CACHE, 12)
+
+        slide = self.pres.Slides(self.INSTR_CACHE)
+
+        slide.Shapes.AddTextbox(Orientation=0x1,
+                                Left=100,
+                                Top=20,
+                                Width=300,
+                                Height=30)
+        slide.Shapes(1).TextFrame.TextRange.Text = "0"
+
+    #loads program from ppasm file
+    def load_ppasm(self, file_path):
+        instr_cache_slide = self.pres.Slides(self.INSTR_CACHE)
+        shape_num = 2
+
+        with open(file_path, 'r') as f:
+            for asm_line in f:
+                if instr_cache_slide.Shapes.Count < shape_num:
+                    instr_cache_slide.Shapes.AddTextbox(Orientation=0x1,
+                                                        Left=100,
+                                                        Top=20 * shape_num,
+                                                        Width=300,
+                                                        Height=30)
+                instr_cache_slide.Shapes(shape_num).TextFrame.TextRange.Text = asm_line.split('\t')[2]
+                shape_num += 1
+
+    #returns next instr
+    def get_next_instr(instr_num):
+        instr_cache_slide = self.pres.Slides(self.INSTR_CACHE)
+        return instr_cache_slide.Shapes(instr_num + 2).TextFrame.TextRange.Text
+
+    #updates instruction counter
+    def update_instr_ptr(new_num):
+        instr_cache_slide = self.pres.Slides(self.INSTR_CACHE)
+        instr_cache_slide.Shapes(1).TextFrame.TextRange.Text = str(new_num)
 
     # Initializes the register page
     def init_register(self):
@@ -50,7 +88,6 @@ class PPAPI:
 
         slide = self.pres.Slides(self.SLIDE_REG)
         textframe = slide.Shapes(reg_num + 1).TextFrame
-
         val = int(textframe.TextRange.Text[4:])
 
         return val
@@ -117,9 +154,9 @@ class PPAPI:
             slide = self.SLIDE_MEM_1
         else:
             slide = self.SLIDE_MEM_1
-            
-        self.pres.SlideShowWindow.View.GoToSlide(slide)
         
+        self.pres.SlideShowWindow.View.GoToSlide(slide)
+
         mem_loc_real = mem_loc
 
         if mem_loc > 127:
@@ -137,7 +174,7 @@ class PPAPI:
         self.pres.SlideShowWindow.View.GoToSlide(tape_loc)
 
         lst = list(val)
-        args = ["C:/Program Files/AutoHotkey/AutoHotkeyU64.exe", 
+        args = ["C:/Program Files/AutoHotkey/AutoHotkeyU64.exe",
                 "hotkey/tape_write.ahk"]
         args += lst
 
@@ -146,9 +183,8 @@ class PPAPI:
 
     # Reads a tape and returns its raw output
     def tape_read_raw(self):
-        ahk = subprocess.Popen(["C:/Program Files/AutoHotkey/AutoHotkeyU64.exe", 
+        ahk = subprocess.Popen(["C:/Program Files/AutoHotkey/AutoHotkeyU64.exe",
                                 "hotkey/tape_read.ahk"], stdout=subprocess.PIPE)
-
         ahk.wait()
         out = ahk.stdout.read().decode()
         print(out)
@@ -181,7 +217,9 @@ if __name__ == "__main__":
 
     time.sleep(5)
 
-    api = PPAPI(pres, init_mem_reg=True)
+    api = PPAPI(pres)
+    api.load_ppasm("./ppasm/test.ppasm")
+    
     api.mem_write(5, 11001111)
     val = api.mem_read(5)
     api.tape_write_raw(4, str(val))
