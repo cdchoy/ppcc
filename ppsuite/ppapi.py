@@ -16,7 +16,7 @@ class PPAPI:
         self.SLIDE_PRED = 6
         self.SLIDE_ADD = 7
         self.SLIDE_SUB = 8
-        
+
 
         if self.pres.Slides.Count == self.NUM_TURING_SLIDES:
             self.init_mem()
@@ -211,8 +211,8 @@ class PPAPI:
         ahk_run = subprocess.Popen(["C:/Program Files/AutoHotkey/AutoHotkeyU64.exe",
                                     "hotkey/cpu_cycle.ahk"])
         ahk_run.wait()
-                                
-        ahk_teardown = subprocess.Popen(["C:/Program Files/AutoHotkey/AutoHotkeyU64.exe", 
+
+        ahk_teardown = subprocess.Popen(["C:/Program Files/AutoHotkey/AutoHotkeyU64.exe",
                                          "hotkey/toggle_exec.ahk", "1"])
         ahk_teardown.wait()
 
