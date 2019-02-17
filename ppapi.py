@@ -15,7 +15,7 @@ class PPAPI:
         if self.pres.Slides.Count == self.NUM_TURING_SLIDES:
             self.init_mem()
             self.init_register()
-            self.init_inst_cache()
+            # self.init_inst_cache()
 
     #init instr cache page
     def init_inst_cache(self):
@@ -47,12 +47,12 @@ class PPAPI:
                 shape_num += 1
 
     #returns next instr
-    def get_next_instr(instr_num):
+    def get_next_instr(self, instr_num):
         instr_cache_slide = self.pres.Slides(self.INSTR_CACHE)
         return instr_cache_slide.Shapes(instr_num + 2).TextFrame.TextRange.Text
 
     #updates instruction counter
-    def update_instr_ptr(new_num):
+    def update_instr_ptr(self, new_num):
         instr_cache_slide = self.pres.Slides(self.INSTR_CACHE)
         instr_cache_slide.Shapes(1).TextFrame.TextRange.Text = str(new_num)
 
@@ -201,7 +201,7 @@ class PPAPI:
         ahk_run.wait()
                                 
         ahk_teardown = subprocess.Popen(["C:/Program Files/AutoHotkey/AutoHotkeyU64.exe", 
-                                         "hotkey/toggle_exec.ahk"])
+                                         "hotkey/toggle_exec.ahk", "1"])
         ahk_teardown.wait()
 
     def teardown(self):
@@ -218,11 +218,11 @@ if __name__ == "__main__":
     time.sleep(5)
 
     api = PPAPI(pres)
-    api.load_ppasm("./ppasm/test.ppasm")
-    
+    # api.load_ppasm("./ppasm/test.ppasm")
+
     api.mem_write(5, 11001111)
     val = api.mem_read(5)
     api.tape_write_raw(4, str(val))
     api.execute()
     res = api.tape_read_raw()
-    api.teardown()
+    # api.teardown()
