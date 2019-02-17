@@ -19,15 +19,7 @@ main:
 	mov B, A
 	load A, SP
 	add SP, 1
-	mov D, SP
-	add D, -1
-	store C, D
-	mov SP, D
-	mov C, 0
-	binopAdd0:
-	add A, 1
-	add C, 1
-	 jne binopAdd0, C, B
+	add A, B
 	.loc 1 3 0
 	# }
 	mov A, 1
