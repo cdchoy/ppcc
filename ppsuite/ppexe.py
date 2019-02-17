@@ -41,6 +41,7 @@ class PPEXE(object):
         else:
             val = self.api.reg_read(src)
 
+        # TODO- make sure val is clean
         self.api.reg_write(dst, val)
 
     def add(self,dst,src):
@@ -143,11 +144,78 @@ class PPEXE(object):
         val = self.api.reg_read(src)
         self.api.mem_write(dst_val, val)
 
-    def jmp(jmp):
+    def eq(self, dst, src):
+        self.sub(dst, src)
+        cond = self.api.reg_read(self._isz_bit)
+        self.mov(dst, cond)
+
+    def ne(self, dst, src):
+        self.sub(dst, src)
+        cond = not self.api.reg_read(self._isz_bit)
+        self.mov(dst, cond)
+
+    def lt(self, dst, src):
+        self.sub(dst, src)
+        cond = not self.api.reg_read(self._isz_bit) and \
+               self.api.reg_read(self._ovr_bit)
+        self.mov(dst, cond)
+
+    def gt(self, dst, src):
+        self.sub(dst, src)
+        cond = not self.api.reg_read(self._isz_bit) and \
+               not self.api.reg_read(self._ovr_bit)
+        self.mov(dst, cond)
+
+    def le(self, dst, src):
+        self.sub(dst, src)
+        cond = self.api.reg_read(self._isz_bit) or \
+               self.api.reg_read(self._ovr_bit)
+        self.mov(dst, cond)
+
+    def ge(self, dst, src):
+        self.sub(dst, src)
+        cond = self.api.reg_read(self._isz_bit) or \
+               not self.api.reg_read(self._ovr_bit)
+        self.mov(dst, cond)
+
+    def jmp(self, jmp):
         self.api.update_instr_ptr(jmp)
 
-    def jeq(jmp, dst, src):
-        sub()
+    def jeq(self, jmp, dst, src):
+        self.eq(dst, src)
+
+        if self.api.reg_read(dst):
+            self.jmp(jmp)
+
+    def jne(self, jmp, dst, src):
+        self.ne(dst, src)
+
+        if self.api.reg_read(dst):
+            self.jmp(jmp)
+
+    def jlt(self, jmp, dst, src):
+        self.lt(dst, src)
+
+        if self.api.reg_read(dst):
+            self.jmp(jmp)
+
+    def jgt(self, jmp, dst, src):
+        self.gt(dst, src)
+
+        if self.api.reg_read(dst):
+            self.jmp(jmp)
+
+    def jle(self, jmp, dst, src):
+        self.le(dst, src)
+
+        if self.api.reg_read(dst):
+            self.jmp(jmp)
+
+    def jge(self, jmp, dst, src):
+        self.ge(dst, src)
+
+        if self.api.reg_read(dst):
+            self.jmp(jmp)
 
 
     def execute(self):
@@ -168,8 +236,32 @@ class PPEXE(object):
                 self.load(args[1][:-1], args[2])
             elif args[0] == 'store':
                 self.store(args[1][:-1], args[2])
+            elif args[0] == 'eq':
+                self.eq(args[1][:-1], args[2])
+            elif args[0] == 'ne':
+                self.ne(args[1][:-1], args[2])
+            elif args[0] == 'lt':
+                self.lt(args[1][:-1], args[2])
+            elif args[0] == 'gt':
+                self.gt(args[1][:-1], args[2])
+            elif args[0] == 'le':
+                self.le(args[1][:-1], args[2])
+            elif args[0] == 'ge':
+                self.ge(args[1][:-1], args[2])
             elif args[0] == 'jmp':
                 self.jmp(args[1])
+            elif args[0] == 'jeq':
+                self.jeq(args[1][:-1], args[2][:-1], args[3])
+            elif args[0] == 'jne':
+                self.jne(args[1][:-1], args[2][:-1], args[3])
+            elif args[0] == 'jlt':
+                self.jlt(args[1][:-1], args[2][:-1], args[3])
+            elif args[0] == 'jgt':
+                self.jgt(args[1][:-1], args[2][:-1], args[3])
+            elif args[0] == 'jle':
+                self.jle(args[1][:-1], args[2][:-1], args[3])
+            elif args[0] == 'jge':
+                self.jge(args[1][:-1], args[2][:-1], args[3])
             elif args[0] == 'exit':
                 break
 
