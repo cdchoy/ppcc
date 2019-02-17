@@ -28,7 +28,7 @@ Loop, 8 {
     }
 
     ; Move to next cell
-    MouseMove, 853, 639, 0
+    MouseMove, 895, 637, 0
     Click
 
     FileAppend, %value%, *

@@ -393,4 +393,10 @@ Loop {
     }
 }
 
-Return
+Loop, 8 {
+    sleep 100
+
+    ; Move to prev cell
+    MouseMove, 895, 610, 0
+    Click
+}

@@ -1,5 +1,5 @@
 import subprocess
-import win32com.client
+import win32com.client  # todo rm. pres is initialized in ppexe
 import time
 
 class PPAPI:
@@ -222,14 +222,10 @@ if __name__ == "__main__":
 
     api = PPAPI(pres)
     api.load_ppasm("./ppasm/test.ppasm")
-    slide = pres.Slides(5)
-    for i in range(slide.Shapes.Count):
-        print(slide.Shapes(i+1).GroupItems)
 
-
-    # api.mem_write(5, 11001111)
-    # val = api.mem_read(5)
-    # api.tape_write_raw(4, str(val))
-    # api.execute()
-    # res = api.tape_read_raw()
-    # api.teardown()
+    api.mem_write(5, 11001111)
+    val = api.mem_read(5)
+    api.tape_write_raw(4, str(val))
+    api.execute()
+    res = api.tape_read_raw()
+    api.teardown()
