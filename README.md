@@ -1,4 +1,4 @@
-# PPP
+# PPSuite
 Presenting the future of software development: Powerpoint.  
 
 Uncommon Hacks Hackathon 2019 Submission
@@ -24,8 +24,8 @@ And so in 2019, we are proud to introduce the PPSuite, a collection of software 
 ## Motivations
 
 * no one tried to stop us
-* strong desire to reinvent the wheel but worse
 * good memes
+* we're trying to remove powerpoint from the App Store
 
 ## The Team
 
@@ -36,23 +36,11 @@ And so in 2019, we are proud to introduce the PPSuite, a collection of software 
 
 ## Architecture
 
-There are 2 main phases to PPCPU:
+C -> ELVM -> PPASM -> PPEXE <-> PPAPI <-> PPCPU
 
-* Generate instruction list
-* Execute instruction list
+We convert C language to PPASM, our custom assembly language for interfacing with PPCPU. To bridge these 2 languages, we utilized a personally modified version of the Esoteric Language Virtual Machine, [ELVM](https://github.com/shinh/elvm/blob/master/ELVM.md?fbclid=IwAR2fsBSlkAFs3sTNRWkGrZycb_oATt_ElK7se8vLm4k5gPK8r2bCVOelR2k), to produce PPASM. From here, PPEXE loads the instructions into PPCPU using PPAPI.
 
-
-#### Generating the Instruction List
-
-C -> ELVM -> PPASM
-
-We convert C language to PPASM, our custom assembly language for interfacing with PPCPU. To bridge these 2 languages, we utilized a personally modified version of the Esoteric Language Virtual Machine, [ELVM](https://github.com/shinh/elvm/blob/master/ELVM.md?fbclid=IwAR2fsBSlkAFs3sTNRWkGrZycb_oATt_ElK7se8vLm4k5gPK8r2bCVOelR2k), to produce PPASM. From here, we utilize PPAPI to write the instructions to the PPCPU instruction code stack.
-
-#### Executing the Instruction List
-
-PPEXE <-> PPAPI <-> PPCPU
-
-We parse through custom assembly language PPASM using PPEXE, a Python executor that functions solely to make ordered calls to our PPAPI. PPAPI utilizes [AutoHotKey](https://www.autohotkey.com/) to abstract out the human clicker required for manually executing cycles in the PPTXTM.
+Next, we decode through the instructions using PPEXE, a Python executor that functions solely to make ordered calls to our PPAPI. PPAPI utilizes [AutoHotKey](https://www.autohotkey.com/) to abstract out the human clicker required for manually executing our PPTXTM cycles.
 
 ## Usage
 

@@ -77,12 +77,12 @@ class PPAPI:
         ip_num = int(instr_cache_slide.Shapes(1).TextFrame.TextRange.Text)
         instr_cache_slide.Shapes(1).TextFrame.TextRange.Text = str(ip_num + 1)
 
-        return instr_cache_slide.Shapes(ip_num).TextFrame.TextRange.Text
+        return instr_cache_slide.Shapes(ip_num + 1).TextFrame.TextRange.Text
 
     #updates instruction counter
     def update_instr_ptr(self, new_num):
         instr_cache_slide = self.pres.Slides(self.INSTR_CACHE)
-        instr_cache_slide.Shapes(1).TextFrame.TextRange.Text = str(new_num)
+        instr_cache_slide.Shapes(1).TextFrame.TextRange.Text = str(int(new_num) + 1)
 
     # Initializes the register page
     def init_register(self):
@@ -99,7 +99,10 @@ class PPAPI:
                                     Height=30)
 
             textframe = slide.Shapes(reg_num).TextFrame
-            textframe.TextRange.Text = "X{}: 0".format(reg_num - 1)
+            if (reg_num == (self.reg_table['SP'] + 1)):
+                textframe.TextRange.Text = "X{}: 255".format(reg_num - 1)
+            else:
+                textframe.TextRange.Text = "X{}: 0".format(reg_num - 1)
 
     # Writes a val to a register
     def reg_write(self, reg_name, val):
@@ -136,24 +139,26 @@ class PPAPI:
         self.pres.SlideShowWindow.View.GoToSlide(self.MEM_0)
 
         for reg_num in range(1, 129):
-            x = 100 + ((reg_num - 1) % 16) * 50
-            y = 50 + 50 * ((reg_num - 1) // 16)
+            x = 15 + ((reg_num - 1) % 16) * 42
+            y = 40 + 57 * ((reg_num - 1) // 16)
 
             slide_0.Shapes.AddTextbox(Orientation=0x1,
                                     Left=x,
                                     Top=y,
-                                    Width=60,
-                                    Height=20)
+                                    Width=45,
+                                    Height=18)
 
             slide_1.Shapes.AddTextbox(Orientation=0x1,
                                     Left=x,
                                     Top=y,
-                                    Width=60,
-                                    Height=20)
+                                    Width=45,
+                                    Height=18)
 
             textframe_0 = slide_0.Shapes(reg_num).TextFrame
+            textframe_0.TextRange.Font.Size = 10
             textframe_0.TextRange.Text = "{}: {}".format(hex(reg_num - 1), hex(0))
             textframe_1 = slide_1.Shapes(reg_num).TextFrame
+            textframe_1.TextRange.Font.Size = 10
             textframe_1.TextRange.Text = "{}: {}".format(hex(reg_num - 1 + 128), hex(0))
 
     # Writes a val to mem
@@ -177,7 +182,7 @@ class PPAPI:
         slide = self.pres.Slides(slide)
         textframe = slide.Shapes(mem_loc_real + 1).TextFrame
 
-        textframe.TextRange.Text = "{}: {}".format(hex(mem_loc), hex(int(str(val), 2)))
+        textframe.TextRange.Text = "{}: {}".format(hex(mem_loc), hex(val))
 
     # Reads a val from mem
     def mem_read(self, mem_loc):

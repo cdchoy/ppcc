@@ -60,6 +60,7 @@ class PPEXE(object):
 
         # initialize overflow flag to 0
         self.api.reg_write(self._ovr_bit, 0)
+        self.api.reg_write(dst, 0)
 
         for i in range(1,9):    # todo: sad conditional
             a = dstr[-i]
@@ -81,7 +82,7 @@ class PPEXE(object):
             # Write back overflow bit and dst bit
             self.api.reg_write(self._ovr_bit, ovr)
             d = self.api.reg_read(dst)
-            self.api.reg_write(dst, int(res + format(d, '08b'), 2))
+            self.api.reg_write(dst, int(res + format(d, 'b'), 2))
 
         return
 
@@ -92,12 +93,15 @@ class PPEXE(object):
             sstr = self.api.reg_read(src)
 
         dstr = self.api.reg_read(dst)
+        print("Subtracting {} from {}".format(sstr, dstr))
         # convert int to binary string
         dstr = format(int(dstr), '08b')
         sstr = format(int(sstr), '08b')
+        print("subtracting {} from {}".format(sstr, dstr))
 
         # initialize overflow flag to 0
         self.api.reg_write(self._ovr_bit, 0)
+        self.api.reg_write(dst, 0)
 
         for i in range(1,9):    # todo: sad conditional
             a = dstr[-i]
@@ -107,7 +111,7 @@ class PPEXE(object):
             # Write Tape to SUBTM
             tape_input = format(ovr,'b') + a + b + '2' + '_' + '2'
             self.api.tape_write_raw(self.api.SUB, tape_input)
-
+            print("tape input: {}".format(tape_input))
             # Execute Tape
             self.api.execute()
 
@@ -115,11 +119,14 @@ class PPEXE(object):
             out = self.api.tape_read_raw()
             ovr = out[4]  # flipped from add for sub
             res = out[3]
+            print("tape output: res {} ovr {}".format(res, ovr))
 
             # Write back overflow bit and dst bit
             self.api.reg_write(self._ovr_bit, ovr)
             d = self.api.reg_read(dst)
-            self.api.reg_write(dst, int(res + format(d, '08b'), 2))
+            print("d is {}".format(d))
+            print("Writing: {}".format(res + format(d, 'b')))
+            self.api.reg_write(dst, int(res + format(d, 'b'), 2))
 
         # set isz_bit
         if self.api.reg_read(dst) == 0: # cond handled by wiring
@@ -137,10 +144,10 @@ class PPEXE(object):
         self.api.reg_write(dst, val)
 
     def store(self,src,dst):
-        if self.is_int(src):  # cond handled by wiring
-            dst_val = int(src)
+        if self.is_int(dst):  # cond handled by wiring
+            dst_val = int(dst)
         else:
-            dst_val = self.api.reg_read(src)
+            dst_val = self.api.reg_read(dst)
 
         val = self.api.reg_read(src)
         self.api.mem_write(dst_val, val)
@@ -148,36 +155,36 @@ class PPEXE(object):
     def eq(self, dst, src):
         self.sub(dst, src)
         cond = self.api.reg_read(self._isz_bit)
-        self.mov(dst, cond)
+        self.mov(self._isz_bit, cond)
 
     def ne(self, dst, src):
         self.sub(dst, src)
         cond = not self.api.reg_read(self._isz_bit)
-        self.mov(dst, cond)
+        self.mov(self._isz_bit, cond)
 
     def lt(self, dst, src):
         self.sub(dst, src)
         cond = not self.api.reg_read(self._isz_bit) and \
                self.api.reg_read(self._ovr_bit)
-        self.mov(dst, cond)
+        self.mov(self._isz_bit, cond)
 
     def gt(self, dst, src):
         self.sub(dst, src)
         cond = not self.api.reg_read(self._isz_bit) and \
                not self.api.reg_read(self._ovr_bit)
-        self.mov(dst, cond)
+        self.mov(self._isz_bit, cond)
 
     def le(self, dst, src):
         self.sub(dst, src)
         cond = self.api.reg_read(self._isz_bit) or \
                self.api.reg_read(self._ovr_bit)
-        self.mov(dst, cond)
+        self.mov(self._isz_bit, cond)
 
     def ge(self, dst, src):
         self.sub(dst, src)
         cond = self.api.reg_read(self._isz_bit) or \
                not self.api.reg_read(self._ovr_bit)
-        self.mov(dst, cond)
+        self.mov(self._isz_bit, cond)
 
     def jmp(self, jmp):
         self.api.update_instr_ptr(jmp)
@@ -185,37 +192,37 @@ class PPEXE(object):
     def jeq(self, jmp, dst, src):
         self.eq(dst, src)
 
-        if self.api.reg_read(dst):
+        if self.api.reg_read(self._isz_bit):
             self.jmp(jmp)
 
     def jne(self, jmp, dst, src):
         self.ne(dst, src)
 
-        if self.api.reg_read(dst):
+        if self.api.reg_read(self._isz_bit):
             self.jmp(jmp)
 
     def jlt(self, jmp, dst, src):
         self.lt(dst, src)
 
-        if self.api.reg_read(dst):
+        if self.api.reg_read(self._isz_bit):
             self.jmp(jmp)
 
     def jgt(self, jmp, dst, src):
         self.gt(dst, src)
 
-        if self.api.reg_read(dst):
+        if self.api.reg_read(self._isz_bit):
             self.jmp(jmp)
 
     def jle(self, jmp, dst, src):
         self.le(dst, src)
 
-        if self.api.reg_read(dst):
+        if self.api.reg_read(self._isz_bit):
             self.jmp(jmp)
 
     def jge(self, jmp, dst, src):
         self.ge(dst, src)
 
-        if self.api.reg_read(dst):
+        if self.api.reg_read(self._isz_bit):
             self.jmp(jmp)
 
 
@@ -281,7 +288,7 @@ if __name__ == "__main__":
     w.find_window_wildcard(".*PPCPU.*")
     w.set_foreground()
 
-    ppt.SlideShowSettings.Run.View.AcceleratorsEnabled = False
+    ppt.SlideShowSettings.Run().View.AcceleratorsEnabled = False
 
     if len(sys.argv) != 2:
         print("USAGE: $ python3 ppexe.py [.ppasm file]")
