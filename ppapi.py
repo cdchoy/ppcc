@@ -3,7 +3,20 @@ import win32com.client
 
 REG_SLIDE = 2
 MEM_SLIDE_0 = 3
+INSTR_CACHE = 5
 
+#init instr cache page
+def init_inst_cache(pres):
+    pres.Slides.Add(INSTR_CACHE, 12)
+
+    slide = pres.Slides(INSTR_CACHE)
+
+    slide.Shapes.AddTextbox(Orientation=0x1,
+                            Left=100,
+                            Top=20,
+                            Width=300,
+                            Height=30)
+    slide.Shapes(reg_num).TextFrame.TextRange.Text = "0"
 # Initializes the register page
 def init_register(pres):
     pres.Slides.Add(REG_SLIDE, 12)
@@ -35,6 +48,8 @@ def reg_read(pres, reg_num):
     val = int(textframe.TextRange.Text[4:])
 
     return val
+
+def int_
 
 # Initializes the memory page
 def init_mem(pres):
@@ -100,7 +115,7 @@ def tape_write(pres, tape_loc, val):
 def tape_read_raw(pres, tape_loc):
     pres.SlideShowWindow.View.GoToSlide(tape_loc)
 
-    ahk = subprocess.Popen(["C:/Program Files/AutoHotkey/AutoHotkeyU64.exe", 
+    ahk = subprocess.Popen(["C:/Program Files/AutoHotkey/AutoHotkeyU64.exe",
                             "hotkey/read_tape.ahk"], stdout=subprocess.PIPE)
 
     out = ahk.stdout.read().decode()
@@ -115,7 +130,7 @@ if __name__ == "__main__":
 
     # pres.Slides(1).Shapes(1).TextFrame.TextRange.Text = "BBBBBBBBBBBBBB"
 
-    
+
     # init_register(pres)
     # reg_write(pres, 2, 4)
     # print(reg_read(pres, 2))
