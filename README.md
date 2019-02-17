@@ -3,14 +3,19 @@ A Powerpoint Compiler
 
 ## Abstract
 
-Through the work of Tom Wildenhain, Powerpoint has been proven and well documented as a complete Turing Machine. Notably, they contributed turing-complete [PPTXTM](https://www.andrew.cmu.edu/user/twildenh/PowerPointTM/Paper.pdf). In this project, we aim to create a compiler that can run C-syntax code in PPTXTM; thereby further bridging the gap between today and a future where all applications may be run in Powerpoint.
+What if you could code in Powerpoint?
+
+Tom Wildenhain produced [PPTXTM](https://www.andrew.cmu.edu/user/twildenh/PowerPointTM/Paper.pdf), a Turing Machine that could function entirely in Powerpoint. The implications? Groundbreaking. The usability? Lacking. To operate the PPTXTM, one needs to write executable punch cards; a technique made obsolete in the 1960s. 
+
+We introduce PPCPU, a cpu functioning entirely in Powerpoint. This includes 256 bytes of memory, 8 registers, and several Arithmetic Logic Units.  
 
 ## Motivations
+
 n/a
 
 ## The Team
 
-Kevin He  
-Chris Choy  
-April Wang  
-Dawson Whitehead  
+* [Kevin He](https://github.com/echowisp)  
+* [Chris Choy](https://github.com/cchoy96)  
+* [April Wang](https://github.com/aprilyw)  
+* [Dawson Whitehead](https://github.com/dwahme)  
