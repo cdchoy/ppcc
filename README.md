@@ -5,7 +5,7 @@ Uncommon Hacks Hackathon 2019 Submission
 
 ## Abstract
 
-What if you could execute code in Powerpoint?
+What if you could execute your C code in Powerpoint?
 
 At Carnegie Mellon's 11th annual SIGBOVIK in 2017, Tom Wildenhain unveiled the [Powerpoint Turing Machine](https://www.andrew.cmu.edu/user/twildenh/PowerPointTM/Paper.pdf) (aka PPTXTM), a Turing Machine that could function entirely in Powerpoint. The implications? Groundbreaking. The usability? Lacking. To operate the PPTXTM, one needs to write executable punch cards; a technique made obsolete in the **1960s**.
 
