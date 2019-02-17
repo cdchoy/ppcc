@@ -5,7 +5,7 @@
 
 import sys  # only for sys.exit()
 import win32com.client
-from ppsuite.ppapi import PPAPI
+from ppsuite import PPAPI
 
 # Stretch Goal Ops:
 #     putc src
@@ -19,7 +19,7 @@ class PPEXE(object):
 
     _ovr_reg = 6  # overflor register for add/sub
 
-    def __init__(self,ppt):
+    def __init__(self,ppt,filepath):
         self.api = PPAPI(ppt)
 
     def is_int(self, val):
@@ -36,7 +36,9 @@ class PPEXE(object):
 
     def execute_instructions(self):
         ''' Execute commands until end of ppasm instruction list '''
-        pass
+        # Load instructions into PPCPU
+        self.api.init_inst_cache()
+        # self.api.load_ppasm(filepath)
 
     def mov(self,dst,src):
         if self.is_int(src):
@@ -59,7 +61,7 @@ class PPEXE(object):
         sstr = format(sstr, '08b')
 
         # initialize overflow flag to 0
-        self.api.reg_write(self._ovr_reg, 0)
+        self.api.reg_write(self.api._ovr_reg, 0)
 
         for i in range(1,9):    # todo: sad conditional
             a = dstr[-i]
@@ -98,7 +100,7 @@ class PPEXE(object):
         sstr = format(sstr, '08b')
 
         # initialize overflow flag to 0
-        self.api.reg_write(self._ovr_reg, 0)
+        self.api.reg_write(self.api._ovr_reg, 0)
 
         for i in range(1,9):    # todo: sad conditional
             a = dstr[-i]
@@ -141,9 +143,22 @@ class PPEXE(object):
         self.api.mem_write(dst_val, val)
 
     def exit(self):
-        sys.exit()
+        sys.exit(0)
+
+    def execute(self):
+        ''' Execute commands until end of ppasm instruction list '''
+        return
 
 if __name__ == "__main__":
     Application = win32com.client.Dispatch("PowerPoint.Application")
     Application.Visible = True
-    ppexe = PPEXE(Application.ActivePresentation)
+    ppt = Application.ActivePresentation
+
+    if len(sys.argv != 3):
+        print("USAGE: $ python3 ppexe.py [.ppasm file]")
+        sys.exit(1)
+
+    fp = sys.argv[2]
+
+    ppexe = PPEXE(ppt,fp)
+    ppexe.execute()

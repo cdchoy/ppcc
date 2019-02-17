@@ -209,8 +209,8 @@ class PPAPI:
         ahk_run = subprocess.Popen(["C:/Program Files/AutoHotkey/AutoHotkeyU64.exe",
                                     "hotkey/cpu_cycle.ahk"])
         ahk_run.wait()
-                                
-        ahk_teardown = subprocess.Popen(["C:/Program Files/AutoHotkey/AutoHotkeyU64.exe", 
+
+        ahk_teardown = subprocess.Popen(["C:/Program Files/AutoHotkey/AutoHotkeyU64.exe",
                                          "hotkey/toggle_exec.ahk", "1"])
         ahk_teardown.wait()
 

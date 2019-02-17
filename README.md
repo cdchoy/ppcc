@@ -54,6 +54,13 @@ PPEXE <-> PPAPI <-> PPCPU
 
 We parse through custom assembly language PPASM using PPEXE, a Python executor that functions solely to make ordered calls to our PPAPI. PPAPI utilizes [AutoHotKey](https://www.autohotkey.com/) to abstract out the human clicker required for manually executing cycles in the PPTXTM.
 
+## Usage
+
+To use our PPSuite, a user will need to write a C file, say foo.c, and then the following commands:
+
+$ ppcc foo.c  
+$ ppexe foo.ppasm  
+
 ## Challenges
 
 1) We had no a priori knowledge on how Turing Machines or Punch Cards actually worked...
