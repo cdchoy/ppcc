@@ -7,6 +7,8 @@ import sys  # only for sys.exit()
 import win32com.client
 from ppapi import PPAPI
 import time
+import win32gui
+from windowmngr import WindowMgr
 
 # Stretch Goal Ops:
 #     putc src
@@ -274,6 +276,12 @@ if __name__ == "__main__":
     Application.Visible = True
     time.sleep(8)
     ppt = Application.ActivePresentation
+
+    w = WindowMgr()
+    w.find_window_wildcard(".*PPCPU.*", True)
+    w.set_foreground()
+
+    ppt.SlideShowSettings.Run.View.AcceleratorsEnabled = False
 
     if len(sys.argv) != 2:
         print("USAGE: $ python3 ppexe.py [.ppasm file]")
