@@ -11,6 +11,13 @@ class PPCC:
     def __init__(self):
         pass
 
+    def is_number(self, s):
+        try:
+            float(s)
+            return True
+        except ValueError:
+            return False
+
     def parse_args(self):
         parser = argparse.ArgumentParser()
         parser.add_argument("file_path")
@@ -49,6 +56,17 @@ class PPCC:
                     if 'j' in line_elems[0]:
                         target = line_elems[1]
                         line_elems[1] = str(branch_dir[target[:-1]])
+                    # If the iinsturction tries to add a negative number, convert it to a sub
+                    if 'add' in line_elems[0]:
+                        arg1 = line_elems[1]
+                        arg2 = line_elems[2].rstrip('\n')
+                        if self.is_number(arg1) and int(arg1) < 0:
+                            line_elems[1] = str(int(arg1) * -1)
+                            line_elems[0] = '\tsub'
+                        if self.is_number(arg2) and int(arg2) < 0:
+                            line_elems[2] = str(int(arg2) * -1)
+                            line_elems[0] = '\tsub'
+
                     nf.write(str(line_num))
                     nf.write("\t")
                     nf.write(' '.join(line_elems).rstrip('\n'))
@@ -57,7 +75,7 @@ class PPCC:
         # os.remove(compiled_file)
 
     def compile(self):
-        if (os.getcwd().split('/')[-1] != 'ppasm'):
+        if (os.getcwd().split('/')[-1] != 'ppsuite'):
             print('Must execute this program in the ppasm folder')
 
         file_path = self.parse_args()

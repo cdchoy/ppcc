@@ -5,7 +5,7 @@ main:
 	store BP, D
 	mov SP, D
 	mov BP, SP
-	.file 1 "./elvm/toy_c/test.c"
+	.file 1 "../elvm/toy_c/test.c"
 	.loc 1 8 0
 	# }
 	.loc 1 5 0
