@@ -5,7 +5,7 @@
 
 import sys  # only for sys.exit()
 import win32com.client
-from ppsuite import PPAPI
+from ppsuite.ppapi import PPAPI
 
 # Stretch Goal Ops:
 #     putc src
@@ -37,7 +37,6 @@ class PPEXE(object):
     def execute_instructions(self):
         ''' Execute commands until end of ppasm instruction list '''
         # Load instructions into PPCPU
-        self.api.init_inst_cache()
         # self.api.load_ppasm(filepath)
 
     def mov(self,dst,src):
@@ -61,7 +60,7 @@ class PPEXE(object):
         sstr = format(sstr, '08b')
 
         # initialize overflow flag to 0
-        self.api.reg_write(self.api._ovr_reg, 0)
+        self.api.reg_write(self._ovr_reg, 0)
 
         for i in range(1,9):    # todo: sad conditional
             a = dstr[-i]
@@ -100,7 +99,7 @@ class PPEXE(object):
         sstr = format(sstr, '08b')
 
         # initialize overflow flag to 0
-        self.api.reg_write(self.api._ovr_reg, 0)
+        self.api.reg_write(self._ovr_reg, 0)
 
         for i in range(1,9):    # todo: sad conditional
             a = dstr[-i]
