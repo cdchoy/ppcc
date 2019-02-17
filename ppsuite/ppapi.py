@@ -15,7 +15,7 @@ class PPAPI:
         self.PRED = 6
         self.ADD = 7
         self.SUB = 8
-        
+
         if self.pres.Slides.Count == self.NUM_TURING_SLIDES:
             self.init_mem()
             self.init_register()
@@ -51,7 +51,7 @@ class PPAPI:
                 shape_num += 1
 
     #returns next instr
-    def get_next_instr(self, instr_num):
+    def get_next_instr(self):
         instr_cache_slide = self.pres.Slides(self.INSTR_CACHE)
         ip_num = int(instr_cache_slide.Shapes(1).TextFrame.TextRange.Text)
         instr_cache_slide.Shapes(1).TextFrame.TextRange.Text = str(ip_num + 1)
