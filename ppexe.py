@@ -4,6 +4,7 @@
 # PPASM -> PPAPI
 
 import sys  # only for sys.exit()
+import win32com.client
 from ppapi import PPAPI
 
 # Stretch Goal Ops:
@@ -16,70 +17,101 @@ from ppapi import PPAPI
 
 class PPEXE(object):
 
-    def __init__():
-        self.api = PPAPI()
+    _ovr_reg = 6  # overflor register for add/sub
 
-    def load_instructions():
+    def __init__(self,ppt):
+        self.api = PPAPI(ppt)
+
+    def load_instructions(self):
         ''' Read in ppasm instructions from pptx slide '''
         pass
 
-    def execute_instructions():
+    def execute_instructions(self):
         ''' Execute commands until end of ppasm instruction list '''
         pass
 
-    def mov(dst,src):
-        val = self.api.reg_read(self.ppt, dst)
-        self.api.reg_write(self.ppt, dst, val)
+    def mov(self,dst,src):
+        val = self.api.reg_read(dst)
+        self.api.reg_write(dst, val)
 
-    def add(dst,src):
-        dstr = self.api.reg_read(self.ppt, dst)
-        sstr = self.api.reg_read(self.ppt, src)
+    def add(self,dst,src):
+        dstr = self.api.reg_read(dst)
+        sstr = self.api.reg_read(src)
         # convert int to binary string
         dstr = format(dstr, '08b')
         sstr = format(sstr, '08b')
 
-        # write overflow flag to 0
+        # initialize overflow flag to 0
+        self.api.reg_write(_ovr_reg, 0)
 
         for i in range(1,9):    # todo: sad conditional
             a = dstr[-i]
             b = sstr[-i]
-            ovr = 0 # todo: read from overflow flag
+            ovr = self.api.reg_read(self._ovr_reg)
 
-            # Write Tape
+            # Write Tape to ADDTM
+            tape_input = format(ovr,'b') + a + b + '2' + '_'
+            self.api.tape_write_raw(self.api.alu_add, tape_input)
 
-            # Execute Tape in addTM
+            # Execute Tape
+            self.api.execute()
 
             # Read Tape
-            out = "00011"
-            ovr = out[3]  # write to ovr flag
-            res = out[4] + res
+            out = self.api.tape_read_raw()
+            ovr = out[3]
+            res = out[4]
 
-            # Write res to dst reg
-            dstr = list(dstr)
-            dstr[-i] = res
-            "".join(dstr)
+            # Write back overflow bit and dst bit
+            self.api.reg_write(self._ovr_reg, ovr)
+            d = self.api.reg_read(dst)
+            self.api.reg_write(dst, int(res + format(d, '08b'), 2))
 
-
-        # Write dstr to reg
         return
 
-    def sub(dst,src):
-        a = self.api.reg_read(self.ppt, dst)
-        b = self.api.reg_read(self.ppt, src)
+    def sub(self,dst,src):
+        dstr = self.api.reg_read(dst)
+        sstr = self.api.reg_read(src)
+        # convert int to binary string
+        dstr = format(dstr, '08b')
+        sstr = format(sstr, '08b')
 
+        # initialize overflow flag to 0
+        self.api.reg_write(_ovr_reg, 0)
 
-        pass
+        for i in range(1,9):    # todo: sad conditional
+            a = dstr[-i]
+            b = sstr[-i]
+            ovr = self.api.reg_read(self._ovr_reg)
 
-    def load(dst,src):
-        val = self.api.reg_read(self.ppt, src)  # todo: src could be mem. write isreg()
-        self.api.reg_write(self.ppt, dst, val)
+            # Write Tape to SUBTM
+            tape_input = format(ovr,'b') + a + b + '2' + '_' + '2'
+            self.api.tape_write_raw(self.api.alu_sub, tape_input)
 
-    def store(src,dst):
-        val = self.api.reg_read(self.ppt, src)  # todo: src could be mem. write isreg()
-        self.api.reg_write(self.ppt, dst, val)
+            # Execute Tape
+            self.api.execute()
 
-    def exit():
+            # Read Tape
+            out = self.api.tape_read_raw()
+            ovr = out[4]  # flipped from add for sub
+            res = out[3]
+
+            # Write back overflow bit and dst bit
+            self.api.reg_write(self._ovr_reg, ovr)
+            d = self.api.reg_read(dst)
+            self.api.reg_write(dst, int(res + format(d, '08b'), 2))
+
+    def load(self,dst,src):
+        val = self.api.reg_read(src)  # todo: src could be mem. write isreg()
+        self.api.reg_write(dst, val)
+
+    def store(self,src,dst):
+        val = self.api.reg_read(src)  # todo: src could be mem. write isreg()
+        self.api.reg_write(dst, val)
+
+    def exit(self):
         sys.exit()
 
 if __name__ == "__main__":
-    p = PPEXE()
+    Application = win32com.client.Dispatch("PowerPoint.Application")
+    Application.Visible = True
+    ppexe = PPEXE(Application.ActivePresentation)

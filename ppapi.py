@@ -1,5 +1,5 @@
 import subprocess
-import win32com.client
+import win32com.client  # todo rm. pres is initialized in ppexe
 import time
 
 class PPAPI:
@@ -154,7 +154,7 @@ class PPAPI:
             slide = self.SLIDE_MEM_1
         else:
             slide = self.SLIDE_MEM_1
-        
+
         self.pres.SlideShowWindow.View.GoToSlide(slide)
 
         mem_loc_real = mem_loc
@@ -192,15 +192,15 @@ class PPAPI:
         return out
 
     def execute(self):
-        ahk_start = subprocess.Popen(["C:/Program Files/AutoHotkey/AutoHotkeyU64.exe", 
+        ahk_start = subprocess.Popen(["C:/Program Files/AutoHotkey/AutoHotkeyU64.exe",
                                       "hotkey/toggle_exec.ahk"])
         ahk_start.wait()
 
-        ahk_run = subprocess.Popen(["C:/Program Files/AutoHotkey/AutoHotkeyU64.exe", 
+        ahk_run = subprocess.Popen(["C:/Program Files/AutoHotkey/AutoHotkeyU64.exe",
                                     "hotkey/cpu_cycle.ahk"])
         ahk_run.wait()
-                                
-        ahk_teardown = subprocess.Popen(["C:/Program Files/AutoHotkey/AutoHotkeyU64.exe", 
+
+        ahk_teardown = subprocess.Popen(["C:/Program Files/AutoHotkey/AutoHotkeyU64.exe",
                                          "hotkey/toggle_exec.ahk"])
         ahk_teardown.wait()
 
@@ -219,7 +219,7 @@ if __name__ == "__main__":
 
     api = PPAPI(pres)
     api.load_ppasm("./ppasm/test.ppasm")
-    
+
     api.mem_write(5, 11001111)
     val = api.mem_read(5)
     api.tape_write_raw(4, str(val))
