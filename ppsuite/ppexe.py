@@ -76,13 +76,13 @@ class PPEXE(object):
 
             # Read Tape
             out = self.api.tape_read_raw()
-            ovr = out[4]
-            res = out[3]
+            ovr = out[3]
+            res = out[4]
 
             # Write back overflow bit and dst bit
             self.api.reg_write(self._ovr_bit, ovr)
             d = self.api.reg_read(dst)
-            self.api.reg_write(dst, int(res + format(d, 'b'), 2))
+            self.api.reg_write(dst, int(res + bin(d)[2:].zfill(i - 1), 2))
 
         return
 
@@ -126,7 +126,7 @@ class PPEXE(object):
             d = self.api.reg_read(dst)
             print("d is {}".format(d))
             print("Writing: {}".format(res + format(d, 'b')))
-            self.api.reg_write(dst, int(res + format(d, 'b'), 2))
+            self.api.reg_write(dst, int(res + bin(d)[2:].zfill(i - 1), 2))
 
         # set isz_bit
         if self.api.reg_read(dst) == 0: # cond handled by wiring
