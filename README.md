@@ -1,13 +1,15 @@
 # ppcc
-A Powerpoint Compiler
+Presenting the future of software development: Powerpoint.  
+
+Uncommon Hacks Hackathon 2019 Submission
 
 ## Abstract
 
-What if you could code in Powerpoint?
+What if you could execute code in Powerpoint?
 
 Tom Wildenhain produced [PPTXTM](https://www.andrew.cmu.edu/user/twildenh/PowerPointTM/Paper.pdf), a Turing Machine that could function entirely in Powerpoint. The implications? Groundbreaking. The usability? Lacking. To operate the PPTXTM, one needs to write executable punch cards; a technique made obsolete in the **1960s**.
 
-We introduce PPCPU, a cpu functioning entirely in Powerpoint. This includes 256 bytes of memory, 8 registers, and several Arithmetic Logic Units.  
+We introduce PPCPU, a cpu functioning entirely in Powerpoint. This includes 256 bytes of memory, 8 registers, and several Arithmetic Logic Units implemented on Turing Machines.  
 
 ## Motivations
 
@@ -42,3 +44,11 @@ We parse through custom assembly language PPASM using PPEXEC, a Python executor 
 ## Challenges
 
 PPTXTM's tape length is unfortunately finite. In this implementation, we wrote all code to function on a Turing Machine with a relatively small 8 bits and 8 states.
+
+## Code Dependencies
+
+* Microsoft Powerpoint
+* Python 3.7
+* AutoHotKey
+
+## Acknowledgements
