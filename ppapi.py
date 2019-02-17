@@ -93,16 +93,24 @@ def mem_read(pres, mem_loc):
 
     return val
 
-def tape_write(pres, tape_loc, val):
-    pass
-
-# Reads a tape and returns its raw output
-def tape_read_raw(pres, tape_loc):
+def tape_write_raw(pres, tape_loc, val):
     pres.SlideShowWindow.View.GoToSlide(tape_loc)
 
-    ahk = subprocess.Popen(["C:/Program Files/AutoHotkey/AutoHotkeyU64.exe", 
-                            "hotkey/read_tape.ahk"], stdout=subprocess.PIPE)
+    lst = list(val)
+    args = ["C:/Program Files/AutoHotkey/AutoHotkeyU64.exe", 
+            "hotkey/tape_write.ahk"]
+    args += lst
 
+    ahk = subprocess.Popen(args, stdout=subprocess.PIPE)
+    out = ahk.stdout.read().decode()
+    ahk.wait()
+
+# Reads a tape and returns its raw output
+def tape_read_raw(pres):
+    ahk = subprocess.Popen(["C:/Program Files/AutoHotkey/AutoHotkeyU64.exe", 
+                            "hotkey/tape_read.ahk"], stdout=subprocess.PIPE)
+
+    ahk.wait()
     out = ahk.stdout.read().decode()
 
     return out
@@ -126,4 +134,5 @@ if __name__ == "__main__":
     #     mem_write(pres, i, i + 3)
     #     print(mem_read(pres, i))
 
-    tape_read_raw(pres, 1)
+    tape_write_raw(pres, 1, "01010101")
+    tape_read_raw(pres)
