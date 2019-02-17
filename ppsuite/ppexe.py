@@ -34,18 +34,6 @@ class PPEXE(object):
         except ValueError:
             return False
 
-<<<<<<< HEAD
-=======
-    def load_instructions(self):
-        ''' Read in ppasm instructions from pptx slide '''
-        pass
-
-    def execute_instructions(self):
-        ''' Execute commands until end of ppasm instruction list '''
-        # Load instructions into PPCPU
-        # self.api.load_ppasm(filepath)
-
->>>>>>> 3278ebe3119de41663c9c638cf134e208e786cf0
     def mov(self,dst,src):
         if self.is_int(src):
             val = int(src)
@@ -136,7 +124,7 @@ class PPEXE(object):
         else:
             src_val = self.api.reg_read(src)
 
-        val = self.api.mem_read(src_val)  # todo: src could be mem. write isreg()
+        val = self.api.mem_read(src_val)
         self.api.reg_write(dst, val)
 
     def store(self,src,dst):
@@ -145,7 +133,7 @@ class PPEXE(object):
         else:
             dst_val = self.api.reg_read(src)
 
-        val = self.api.reg_read(src)  # todo: src could be mem. write isreg()
+        val = self.api.reg_read(src)
         self.api.mem_write(dst_val, val)
 
     def exit(self):
@@ -154,6 +142,8 @@ class PPEXE(object):
     def execute(self):
         ''' Execute commands until end of ppasm instruction list '''
 
+        while (1):      # todo: sad loop :(
+            instr = self.api.get_next_instr()
         return
 
 if __name__ == "__main__":
