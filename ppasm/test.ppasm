@@ -1,0 +1,42 @@
+0		mov D, SP
+1		add D, -1
+2		store BP, D
+3		mov SP, D
+4		mov BP, SP
+5		mov A, 1
+6		jeq 18 A, 0
+7		mov A, 6
+8		mov D, SP
+9		add D, -1
+10		store A, D
+11		mov SP, D
+12		mov A, 3
+13		mov B, A
+14		load A, SP
+15		add SP, 1
+16		add A, B
+17		jmp 28
+18		mov A, 6
+19		mov D, SP
+20		add D, -1
+21		store A, D
+22		mov SP, D
+23		mov A, 4
+24		mov B, A
+25		load A, SP
+26		add SP, 1
+27		add A, B
+28		mov A, 5
+29		mov D, SP
+30		add D, -1
+31		store A, D
+32		mov SP, D
+33		mov A, 3
+34		mov B, A
+35		load A, SP
+36		add SP, 1
+37		add A, B
+38		mov A, 1
+39		mov B, A
+40		exit
+41		exit
