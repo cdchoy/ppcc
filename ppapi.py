@@ -9,27 +9,46 @@ class PPAPI:
         self.SLIDE_MEM_1 = 2
         self.SLIDE_REG = 3
         self.INSTR_CACHE = 4
+        self.instr_loaded = False
 
         if (init_mem_reg == True):
             self.init_mem()
             self.init_register()
+            self.init_inst_cache()
 
     #init instr cache page
-    def init_inst_cache(self, pres):
-        pres.Slides.Add(INSTR_CACHE, 12)
+    def init_inst_cache(self):
+        pres.Slides.Add(self.INSTR_CACHE, 12)
 
-        slide = pres.Slides(INSTR_CACHE)
+        slide = pres.Slides(self.INSTR_CACHE)
 
         slide.Shapes.AddTextbox(Orientation=0x1,
                                 Left=100,
                                 Top=20,
                                 Width=300,
                                 Height=30)
-        slide.Shapes(reg_num).TextFrame.TextRange.Text = "0"
+        slide.Shapes(1).TextFrame.TextRange.Text = "0"
 
-    # Initializes the register page
-    def init_register(self, pres):
-        pres.Slides.Add(REG_SLIDE, 12)
+    #loads program from ppasm file
+    def load_ppasm(self, file_path):
+        instr_cache_slide = pres.Slides(self.INSTR_CACHE)
+        shape_num = 2
+
+        if (self.instr_loaded):
+            print("Instructions already loaded!")
+            return
+
+        with open(file_path, 'r') as f:
+            for asm_line in f:
+                print(asm_line)
+                instr_cache_slide.Shapes.AddTextbox(Orientation=0x1,
+                                                    Left=100,
+                                                    Top=20 + 5 * shape_num,
+                                                    Width=300,
+                                                    Height=30)
+                instr_cache_slide.Shapes(shape_num).TextFrame.TextRange.Text = asm_line
+                shape_num += 1
+
 
     # Initializes the register page
     def init_register(self):
@@ -161,3 +180,4 @@ if __name__ == "__main__":
     pres = Application.ActivePresentation
 
     api = PPAPI(pres)
+    api.load_ppasm("./ppasm/test.ppasm")
