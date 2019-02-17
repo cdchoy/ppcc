@@ -99,7 +99,10 @@ class PPAPI:
                                     Height=30)
 
             textframe = slide.Shapes(reg_num).TextFrame
-            textframe.TextRange.Text = "X{}: 0".format(reg_num - 1)
+            if (reg_num == (self.reg_table['SP'] + 1)):
+                textframe.TextRange.Text = "X{}: 255".format(reg_num - 1)
+            else:
+                textframe.TextRange.Text = "X{}: 0".format(reg_num - 1)
 
     # Writes a val to a register
     def reg_write(self, reg_name, val):
@@ -137,7 +140,7 @@ class PPAPI:
 
         for reg_num in range(1, 129):
             x = 15 + ((reg_num - 1) % 16) * 42
-            y = 30 + 57 * ((reg_num - 1) // 16)
+            y = 40 + 57 * ((reg_num - 1) // 16)
 
             slide_0.Shapes.AddTextbox(Orientation=0x1,
                                     Left=x,
@@ -179,7 +182,7 @@ class PPAPI:
         slide = self.pres.Slides(slide)
         textframe = slide.Shapes(mem_loc_real + 1).TextFrame
 
-        textframe.TextRange.Text = "{}: {}".format(hex(mem_loc), hex(int(str(val), 2)))
+        textframe.TextRange.Text = "{}: {}".format(hex(mem_loc), hex(val))
 
     # Reads a val from mem
     def mem_read(self, mem_loc):
