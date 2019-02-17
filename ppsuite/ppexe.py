@@ -82,7 +82,10 @@ class PPEXE(object):
             # Write back overflow bit and dst bit
             self.api.reg_write(self._ovr_bit, ovr)
             d = self.api.reg_read(dst)
-            self.api.reg_write(dst, int(res + bin(d)[2:].zfill(i - 1), 2))
+            if (i == 1):
+                self.api.reg_write(dst, int(res + format(d, 'b'), 2))
+            else:
+                self.api.reg_write(dst, int(res + bin(d)[2:].zfill(i - 1), 2))
 
         return
 
@@ -126,7 +129,10 @@ class PPEXE(object):
             d = self.api.reg_read(dst)
             print("d is {}".format(d))
             print("Writing: {}".format(res + format(d, 'b')))
-            self.api.reg_write(dst, int(res + bin(d)[2:].zfill(i - 1), 2))
+            if (i == 1):
+                self.api.reg_write(dst, int(res + format(d, 'b'), 2))
+            else:
+                self.api.reg_write(dst, int(res + bin(d)[2:].zfill(i - 1), 2))
 
         # set isz_bit
         if self.api.reg_read(dst) == 0: # cond handled by wiring
