@@ -5,22 +5,21 @@ class PPAPI:
     def __init__(self, pres):
         self.pres = pres
 
-        self.SLIDE_MEM_0 = 1
-        self.SLIDE_MEM_1 = 2
-        self.SLIDE_REG = 3
+        self.MEM_0 = 1
+        self.MEM_1 = 2
+        self.REG = 3
         self.INSTR_CACHE = 4
 
         self.NUM_TURING_SLIDES = 4 #Chane this
-        self.SLIDE_SUCC = 5
-        self.SLIDE_PRED = 6
-        self.SLIDE_ADD = 7
-        self.SLIDE_SUB = 8
+        self.SUCC = 5
+        self.PRED = 6
+        self.ADD = 7
+        self.SUB = 8
         
-
         if self.pres.Slides.Count == self.NUM_TURING_SLIDES:
             self.init_mem()
             self.init_register()
-            # self.init_inst_cache()
+            self.init_inst_cache()
 
     #init instr cache page
     def init_inst_cache(self):
@@ -66,10 +65,10 @@ class PPAPI:
 
     # Initializes the register page
     def init_register(self):
-        self.pres.Slides.Add(self.SLIDE_REG, 12)
+        self.pres.Slides.Add(self.REG, 12)
 
-        slide = self.pres.Slides(self.SLIDE_REG)
-        self.pres.SlideShowWindow.View.GoToSlide(self.SLIDE_REG)
+        slide = self.pres.Slides(self.REG)
+        self.pres.SlideShowWindow.View.GoToSlide(self.REG)
 
         for reg_num in range(1, 9):
             slide.Shapes.AddTextbox(Orientation=0x1,
@@ -83,18 +82,18 @@ class PPAPI:
 
     # Writes a val to a register
     def reg_write(self, reg_num, val):
-        self.pres.SlideShowWindow.View.GoToSlide(self.SLIDE_REG)
+        self.pres.SlideShowWindow.View.GoToSlide(self.REG)
 
-        slide = self.pres.Slides(self.SLIDE_REG)
+        slide = self.pres.Slides(self.REG)
         textframe = slide.Shapes(reg_num + 1).TextFrame
 
         textframe.TextRange.Text = "X{}: {}".format(reg_num,val)
 
     # Reads a val from a register
     def reg_read(self, reg_num):
-        self.pres.SlideShowWindow.View.GoToSlide(self.SLIDE_REG)
+        self.pres.SlideShowWindow.View.GoToSlide(self.REG)
 
-        slide = self.pres.Slides(self.SLIDE_REG)
+        slide = self.pres.Slides(self.REG)
         textframe = slide.Shapes(reg_num + 1).TextFrame
         val = int(textframe.TextRange.Text[4:])
 
@@ -102,11 +101,11 @@ class PPAPI:
 
     # Initializes the memory page
     def init_mem(self):
-        self.pres.Slides.Add(self.SLIDE_MEM_0, 12)
-        self.pres.Slides.Add(self.SLIDE_MEM_1, 12)
-        slide_0 = self.pres.Slides(self.SLIDE_MEM_0)
-        slide_1 = self.pres.Slides(self.SLIDE_MEM_1)
-        self.pres.SlideShowWindow.View.GoToSlide(self.SLIDE_MEM_0)
+        self.pres.Slides.Add(self.MEM_0, 12)
+        self.pres.Slides.Add(self.MEM_1, 12)
+        slide_0 = self.pres.Slides(self.MEM_0)
+        slide_1 = self.pres.Slides(self.MEM_1)
+        self.pres.SlideShowWindow.View.GoToSlide(self.MEM_0)
 
         for reg_num in range(1, 129):
             x = 100 + ((reg_num - 1) % 16) * 50
@@ -134,11 +133,11 @@ class PPAPI:
         overflow = mem_loc // 128
 
         if overflow == 0:
-            slide = self.SLIDE_MEM_0
+            slide = self.MEM_0
         elif overflow == 1:
-            slide = self.SLIDE_MEM_1
+            slide = self.MEM_1
         else:
-            slide = self.SLIDE_MEM_1
+            slide = self.MEM_1
 
         self.pres.SlideShowWindow.View.GoToSlide(slide)
 
@@ -157,11 +156,11 @@ class PPAPI:
         overflow = mem_loc // 128
 
         if overflow == 0:
-            slide = self.SLIDE_MEM_0
+            slide = self.MEM_0
         elif overflow == 1:
-            slide = self.SLIDE_MEM_1
+            slide = self.MEM_1
         else:
-            slide = self.SLIDE_MEM_1
+            slide = self.MEM_1
 
         self.pres.SlideShowWindow.View.GoToSlide(slide)
 
@@ -216,9 +215,9 @@ class PPAPI:
         ahk_teardown.wait()
 
     def teardown(self):
-        self.pres.Slides.Delete(1) # SLIDE_MEM_0
-        self.pres.Slides.Delete(1) # SLIDE_MEM_1
-        self.pres.Slides.Delete(1) # SLIDE_REG
+        self.pres.Slides.Delete(1) # MEM_0
+        self.pres.Slides.Delete(1) # MEM_1
+        self.pres.Slides.Delete(1) # REG
 
 
 if __name__ == "__main__":
