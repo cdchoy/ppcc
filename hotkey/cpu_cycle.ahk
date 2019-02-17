@@ -17,180 +17,180 @@ Loop {
     Clicked = 0
 
     ; Read buttons
-    PixelGetColor, color_var, 857, 839 
+    PixelGetColor, color_var, 858, 839 
     if (color_var == 0x317ded || color_var == 0x2444d1) {
-        MouseMove, 857, 839, 0
+        MouseMove, 858, 839, 0
         Clicked = 1
         Click
     }
-    PixelGetColor, color_var, 894, 839 
+    PixelGetColor, color_var, 914, 839 
     if (color_var == 0x317ded || color_var == 0x2444d1) {
-        MouseMove, 894, 839, 0
+        MouseMove, 914, 839, 0
         Clicked = 1
         Click
     }
-    PixelGetColor, color_var, 1006, 839 
+    PixelGetColor, color_var, 972, 839 
     if (color_var == 0x317ded || color_var == 0x2444d1) {
-        MouseMove, 1006, 839, 0
+        MouseMove, 972, 839, 0
         Clicked = 1
         Click
     }
-    PixelGetColor, color_var, 1065, 839 
+    PixelGetColor, color_var, 1030, 839 
     if (color_var == 0x317ded || color_var == 0x2444d1) {
-        MouseMove, 1065, 839, 0
+        MouseMove, 1030, 839, 0
         Clicked = 1
         Click
     }
 
     ; Write buttons
-    PixelGetColor, color_var, 857, 693 
+    PixelGetColor, color_var, 858, 693 
     if (color_var == 0x317ded || color_var == 0x2444d1) {
-        MouseMove, 857, 693, 0
+        MouseMove, 858, 693, 0
         Clicked = 1
         Click
     }
-    PixelGetColor, color_var, 894, 693 
+    PixelGetColor, color_var, 914, 693 
     if (color_var == 0x317ded || color_var == 0x2444d1) {
-        MouseMove, 894, 693, 0
+        MouseMove, 914, 693, 0
         Clicked = 1
         Click
     }
-    PixelGetColor, color_var, 1006, 693 
+    PixelGetColor, color_var, 972, 693 
     if (color_var == 0x317ded || color_var == 0x2444d1) {
-        MouseMove, 1006, 693, 0
+        MouseMove, 972, 693, 0
         Clicked = 1
         Click
     }
-    PixelGetColor, color_var, 1065, 693 
+    PixelGetColor, color_var, 1030, 693 
     if (color_var == 0x317ded || color_var == 0x2444d1) {
-        MouseMove, 1065, 693, 0
-        Clicked = 1
-        Click
-    }
-
-    PixelGetColor, color_var, 857, 724 
-    if (color_var == 0x317ded || color_var == 0x2444d1) {
-        MouseMove, 857, 724, 0
-        Clicked = 1
-        Click
-    }
-    PixelGetColor, color_var, 894, 724 
-    if (color_var == 0x317ded || color_var == 0x2444d1) {
-        MouseMove, 894, 724, 0
-        Clicked = 1
-        Click
-    }
-    PixelGetColor, color_var, 1006, 724 
-    if (color_var == 0x317ded || color_var == 0x2444d1) {
-        MouseMove, 1006, 724, 0
-        Clicked = 1
-        Click
-    }
-    PixelGetColor, color_var, 1065, 724 
-    if (color_var == 0x317ded || color_var == 0x2444d1) {
-        MouseMove, 1065, 724, 0
+        MouseMove, 1030, 693, 0
         Clicked = 1
         Click
     }
 
-    PixelGetColor, color_var, 857, 753 
+    PixelGetColor, color_var, 858, 724 
     if (color_var == 0x317ded || color_var == 0x2444d1) {
-        MouseMove, 857, 753, 0
+        MouseMove, 858, 724, 0
         Clicked = 1
         Click
     }
-    PixelGetColor, color_var, 894, 753 
+    PixelGetColor, color_var, 914, 724 
     if (color_var == 0x317ded || color_var == 0x2444d1) {
-        MouseMove, 894, 753, 0
+        MouseMove, 914, 724, 0
         Clicked = 1
         Click
     }
-    PixelGetColor, color_var, 1006, 753 
+    PixelGetColor, color_var, 972, 724 
     if (color_var == 0x317ded || color_var == 0x2444d1) {
-        MouseMove, 1006, 753, 0
+        MouseMove, 972, 724, 0
         Clicked = 1
         Click
     }
-    PixelGetColor, color_var, 1065, 753 
+    PixelGetColor, color_var, 1030, 724 
     if (color_var == 0x317ded || color_var == 0x2444d1) {
-        MouseMove, 1065, 753, 0
+        MouseMove, 1030, 724, 0
         Clicked = 1
         Click
     }
 
-    PixelGetColor, color_var, 857, 781 
+    PixelGetColor, color_var, 858, 753 
     if (color_var == 0x317ded || color_var == 0x2444d1) {
-        MouseMove, 857, 781, 0
+        MouseMove, 858, 753, 0
         Clicked = 1
         Click
     }
-    PixelGetColor, color_var, 894, 781 
+    PixelGetColor, color_var, 914, 753 
     if (color_var == 0x317ded || color_var == 0x2444d1) {
-        MouseMove, 894, 781, 0
+        MouseMove, 914, 753, 0
         Clicked = 1
         Click
     }
-    PixelGetColor, color_var, 1006, 781 
+    PixelGetColor, color_var, 972, 753 
     if (color_var == 0x317ded || color_var == 0x2444d1) {
-        MouseMove, 1006, 781, 0
+        MouseMove, 972, 753, 0
         Clicked = 1
         Click
     }
-    PixelGetColor, color_var, 1065, 781 
+    PixelGetColor, color_var, 1030, 753 
     if (color_var == 0x317ded || color_var == 0x2444d1) {
-        MouseMove, 1065, 781, 0
+        MouseMove, 1030, 753, 0
+        Clicked = 1
+        Click
+    }
+
+    PixelGetColor, color_var, 858, 781 
+    if (color_var == 0x317ded || color_var == 0x2444d1) {
+        MouseMove, 858, 781, 0
+        Clicked = 1
+        Click
+    }
+    PixelGetColor, color_var, 914, 781 
+    if (color_var == 0x317ded || color_var == 0x2444d1) {
+        MouseMove, 914, 781, 0
+        Clicked = 1
+        Click
+    }
+    PixelGetColor, color_var, 972, 781 
+    if (color_var == 0x317ded || color_var == 0x2444d1) {
+        MouseMove, 972, 781, 0
+        Clicked = 1
+        Click
+    }
+    PixelGetColor, color_var, 1030, 781 
+    if (color_var == 0x317ded || color_var == 0x2444d1) {
+        MouseMove, 1030, 781, 0
         Clicked = 1
         Click
     }
 
     ; Move buttons
-    PixelGetColor, color_var, 857, 609 
+    PixelGetColor, color_var, 858, 609 
     if (color_var == 0x317ded || color_var == 0x2444d1) {
-        MouseMove, 857, 609, 0
+        MouseMove, 858, 609, 0
         Clicked = 1
         Click
     }
 
-    PixelGetColor, color_var, 894, 609 
+    PixelGetColor, color_var, 914, 609 
     if (color_var == 0x317ded || color_var == 0x2444d1) {
-        MouseMove, 894, 609, 0
+        MouseMove, 914, 609, 0
         Clicked = 1
         Click
     }
-    PixelGetColor, color_var, 1006, 609 
+    PixelGetColor, color_var, 972, 609 
     if (color_var == 0x317ded || color_var == 0x2444d1) {
-        MouseMove, 1006, 609, 0
+        MouseMove, 972, 609, 0
         Clicked = 1
         Click
     }
-    PixelGetColor, color_var, 1065, 609 
+    PixelGetColor, color_var, 1030, 609 
     if (color_var == 0x317ded || color_var == 0x2444d1) {
-        MouseMove, 1065, 609, 0
+        MouseMove, 1030, 609, 0
         Clicked = 1
         Click
     }
 
-    PixelGetColor, color_var, 857, 640 
+    PixelGetColor, color_var, 858, 640 
     if (color_var == 0x317ded || color_var == 0x2444d1) {
-        MouseMove, 857, 640, 0
+        MouseMove, 858, 640, 0
         Clicked = 1
         Click
     }
-    PixelGetColor, color_var, 894, 640 
+    PixelGetColor, color_var, 914, 640 
     if (color_var == 0x317ded || color_var == 0x2444d1) {
-        MouseMove, 894, 640, 0
+        MouseMove, 914, 640, 0
         Clicked = 1
         Click
     }
-    PixelGetColor, color_var, 1006, 640 
+    PixelGetColor, color_var, 972, 640 
     if (color_var == 0x317ded || color_var == 0x2444d1) {
-        MouseMove, 1006, 640, 0
+        MouseMove, 972, 640, 0
         Clicked = 1
         Click
     }
-    PixelGetColor, color_var, 1065, 640 
+    PixelGetColor, color_var, 1030, 640 
     if (color_var == 0x317ded || color_var == 0x2444d1) {
-        MouseMove, 1065, 640, 0
+        MouseMove, 1030, 640, 0
         Clicked = 1
         Click
     }

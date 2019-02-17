@@ -1,3 +1,4 @@
+import subprocess
 import win32com.client
 
 REG_SLIDE = 2
@@ -92,6 +93,19 @@ def mem_read(pres, mem_loc):
 
     return val
 
+def tape_write(pres, tape_loc, val):
+    pass
+
+# Reads a tape and returns its raw output
+def tape_read_raw(pres, tape_loc):
+    pres.SlideShowWindow.View.GoToSlide(tape_loc)
+
+    ahk = subprocess.Popen(["C:/Program Files/AutoHotkey/AutoHotkeyU64.exe", 
+                            "hotkey/read_tape.ahk"], stdout=subprocess.PIPE)
+
+    out = ahk.stdout.read().decode()
+
+    return out
 
 if __name__ == "__main__":
     Application = win32com.client.Dispatch("PowerPoint.Application")
@@ -102,12 +116,14 @@ if __name__ == "__main__":
     # pres.Slides(1).Shapes(1).TextFrame.TextRange.Text = "BBBBBBBBBBBBBB"
 
     
-    init_register(pres)
-    reg_write(pres, 2, 4)
-    print(reg_read(pres, 2))
+    # init_register(pres)
+    # reg_write(pres, 2, 4)
+    # print(reg_read(pres, 2))
 
-    init_mem(pres)
+    # init_mem(pres)
 
-    for i in range(0, 256):
-        mem_write(pres, i, i + 3)
-        print(mem_read(pres, i))
+    # for i in range(0, 256):
+    #     mem_write(pres, i, i + 3)
+    #     print(mem_read(pres, i))
+
+    tape_read_raw(pres, 1)
