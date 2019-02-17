@@ -66,6 +66,12 @@ class PPCC:
                         if self.is_number(arg2) and int(arg2) < 0:
                             line_elems[2] = str(int(arg2) * -1)
                             line_elems[0] = '\tsub'
+                    if 'sub' in line_elems[0]:
+                        arg1 = line_elems[1]
+                        arg2 = line_elems[2].rstrip('\n')
+                        if self.is_number(arg2) and int(arg2) < 0:
+                            line_elems[2] = str(int(arg2) * -1)
+                            line_elems[0] = '\tadd'
 
                     nf.write(str(line_num))
                     nf.write("\t")
