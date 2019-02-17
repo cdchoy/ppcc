@@ -50,5 +50,6 @@ PPTXTM's tape length is unfortunately finite. In this implementation, we wrote a
 * Microsoft Powerpoint
 * Python 3.7
 * AutoHotKey
+* win32COM
 
 ## Acknowledgements

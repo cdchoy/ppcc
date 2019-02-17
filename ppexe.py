@@ -32,13 +32,36 @@ class PPEXE(object):
         self.api.reg_write(self.ppt, dst, val)
 
     def add(dst,src):
-        a = self.api.reg_read(self.ppt, dst)
-        b = self.api.reg_read(self.ppt, src)
-        # int -> binary string
-        a = format(a, 'b')
-        b = format(b, 'b')
+        dstr = self.api.reg_read(self.ppt, dst)
+        sstr = self.api.reg_read(self.ppt, src)
+        # convert int to binary string
+        dstr = format(dstr, '08b')
+        sstr = format(sstr, '08b')
 
-        pass
+        # write overflow flag to 0
+
+        for i in range(1,9):    # todo: sad conditional
+            a = dstr[-i]
+            b = sstr[-i]
+            ovr = 0 # todo: read from overflow flag
+
+            # Write Tape
+
+            # Execute Tape in addTM
+
+            # Read Tape
+            out = "00011"
+            ovr = out[3]  # write to ovr flag
+            res = out[4] + res
+
+            # Write res to dst reg
+            dstr = list(dstr)
+            dstr[-i] = res
+            "".join(dstr)
+
+
+        # Write dstr to reg
+        return
 
     def sub(dst,src):
         a = self.api.reg_read(self.ppt, dst)
@@ -57,7 +80,6 @@ class PPEXE(object):
 
     def exit():
         sys.exit()
-}
 
 if __name__ == "__main__":
     p = PPEXE()
