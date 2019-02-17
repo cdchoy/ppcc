@@ -1,5 +1,5 @@
 import subprocess
-import win32com.client
+import win32com.client  # todo rm. pres is initialized in ppexe
 import time
 
 class PPAPI:
@@ -49,7 +49,10 @@ class PPAPI:
     #returns next instr
     def get_next_instr(self, instr_num):
         instr_cache_slide = self.pres.Slides(self.INSTR_CACHE)
-        return instr_cache_slide.Shapes(instr_num + 2).TextFrame.TextRange.Text
+        ip_num = int(instr_cache_slide.Shapes(1).TextFrame.TextRange.Text)
+        instr_cache_slide.Shapes(1).TextFrame.TextRange.Text = str(ip_num + 1)
+
+        return instr_cache_slide.Shapes(ip_num).TextFrame.TextRange.Text
 
     #updates instruction counter
     def update_instr_ptr(self, new_num):
@@ -154,7 +157,7 @@ class PPAPI:
             slide = self.SLIDE_MEM_1
         else:
             slide = self.SLIDE_MEM_1
-        
+
         self.pres.SlideShowWindow.View.GoToSlide(slide)
 
         mem_loc_real = mem_loc
@@ -192,11 +195,11 @@ class PPAPI:
         return out
 
     def execute(self):
-        ahk_start = subprocess.Popen(["C:/Program Files/AutoHotkey/AutoHotkeyU64.exe", 
+        ahk_start = subprocess.Popen(["C:/Program Files/AutoHotkey/AutoHotkeyU64.exe",
                                       "hotkey/toggle_exec.ahk"])
         ahk_start.wait()
 
-        ahk_run = subprocess.Popen(["C:/Program Files/AutoHotkey/AutoHotkeyU64.exe", 
+        ahk_run = subprocess.Popen(["C:/Program Files/AutoHotkey/AutoHotkeyU64.exe",
                                     "hotkey/cpu_cycle.ahk"])
         ahk_run.wait()
                                 
