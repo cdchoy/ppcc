@@ -1,5 +1,6 @@
 import subprocess
 import win32com.client
+import time
 
 class PPAPI:
     def __init__(self, pres):
@@ -60,6 +61,7 @@ class PPAPI:
         self.pres.Slides.Add(self.SLIDE_REG, 12)
 
         slide = self.pres.Slides(self.SLIDE_REG)
+        self.pres.SlideShowWindow.View.GoToSlide(self.SLIDE_REG)
 
         for reg_num in range(1, 9):
             slide.Shapes.AddTextbox(Orientation=0x1,
@@ -73,6 +75,8 @@ class PPAPI:
 
     # Writes a val to a register
     def reg_write(self, reg_num, val):
+        self.pres.SlideShowWindow.View.GoToSlide(self.SLIDE_REG)
+
         slide = self.pres.Slides(self.SLIDE_REG)
         textframe = slide.Shapes(reg_num + 1).TextFrame
 
@@ -80,6 +84,8 @@ class PPAPI:
 
     # Reads a val from a register
     def reg_read(self, reg_num):
+        self.pres.SlideShowWindow.View.GoToSlide(self.SLIDE_REG)
+
         slide = self.pres.Slides(self.SLIDE_REG)
         textframe = slide.Shapes(reg_num + 1).TextFrame
         val = int(textframe.TextRange.Text[4:])
@@ -92,6 +98,7 @@ class PPAPI:
         self.pres.Slides.Add(self.SLIDE_MEM_1, 12)
         slide_0 = self.pres.Slides(self.SLIDE_MEM_0)
         slide_1 = self.pres.Slides(self.SLIDE_MEM_1)
+        self.pres.SlideShowWindow.View.GoToSlide(self.SLIDE_MEM_0)
 
         for reg_num in range(1, 129):
             x = 100 + ((reg_num - 1) % 16) * 50
@@ -125,6 +132,8 @@ class PPAPI:
         else:
             slide = self.SLIDE_MEM_1
 
+        self.pres.SlideShowWindow.View.GoToSlide(slide)
+
         mem_loc_real = mem_loc
 
         if mem_loc > 127:
@@ -145,6 +154,8 @@ class PPAPI:
             slide = self.SLIDE_MEM_1
         else:
             slide = self.SLIDE_MEM_1
+        
+        self.pres.SlideShowWindow.View.GoToSlide(slide)
 
         mem_loc_real = mem_loc
 
@@ -176,13 +187,42 @@ class PPAPI:
                                 "hotkey/tape_read.ahk"], stdout=subprocess.PIPE)
         ahk.wait()
         out = ahk.stdout.read().decode()
+        print(out)
 
         return out
+
+    def execute(self):
+        ahk_start = subprocess.Popen(["C:/Program Files/AutoHotkey/AutoHotkeyU64.exe", 
+                                      "hotkey/toggle_exec.ahk"])
+        ahk_start.wait()
+
+        ahk_run = subprocess.Popen(["C:/Program Files/AutoHotkey/AutoHotkeyU64.exe", 
+                                    "hotkey/cpu_cycle.ahk"])
+        ahk_run.wait()
+                                
+        ahk_teardown = subprocess.Popen(["C:/Program Files/AutoHotkey/AutoHotkeyU64.exe", 
+                                         "hotkey/toggle_exec.ahk"])
+        ahk_teardown.wait()
+
+    def teardown(self):
+        self.pres.Slides.Delete(1) # SLIDE_MEM_0
+        self.pres.Slides.Delete(1) # SLIDE_MEM_1
+        self.pres.Slides.Delete(1) # SLIDE_REG
+
 
 if __name__ == "__main__":
     Application = win32com.client.Dispatch("PowerPoint.Application")
     Application.Visible = True
     pres = Application.ActivePresentation
 
+    time.sleep(5)
+
     api = PPAPI(pres)
     api.load_ppasm("./ppasm/test.ppasm")
+    
+    api.mem_write(5, 11001111)
+    val = api.mem_read(5)
+    api.tape_write_raw(4, str(val))
+    api.execute()
+    res = api.tape_read_raw()
+    api.teardown()

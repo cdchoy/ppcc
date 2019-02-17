@@ -9,8 +9,6 @@
 ; I'm sorry about the bad code
 ; AutoHotKey scripting is awful
 
-Sleep, 20000
-
 Loop {
 
     ; Were we able to click something?

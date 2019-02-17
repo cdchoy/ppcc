@@ -35,8 +35,9 @@ Loop, 8 {
 }
 
 Loop, 8 {
+    sleep 100
 
     ; Move to prev cell
-    MouseMove, 853, 610, 0
+    MouseMove, 895, 610, 0
     Click
 }
