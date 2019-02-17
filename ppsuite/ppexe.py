@@ -17,7 +17,8 @@ from ppsuite.ppapi import PPAPI
 
 class PPEXE(object):
 
-    _ovr_reg = 6  # overflor register for add/sub
+    _ovr_bit = 6  # over/underflow register for add/sub
+    _isz_bit = 7  # isZero flag
 
     def __init__(self,ppt,filepath):
         self.api = PPAPI(ppt)
@@ -55,12 +56,12 @@ class PPEXE(object):
         sstr = format(sstr, '08b')
 
         # initialize overflow flag to 0
-        self.api.reg_write(self._ovr_reg, 0)
+        self.api.reg_write(self._ovr_bit, 0)
 
         for i in range(1,9):    # todo: sad conditional
             a = dstr[-i]
             b = sstr[-i]
-            ovr = self.api.reg_read(self._ovr_reg)
+            ovr = self.api.reg_read(self._ovr_bit)
 
             # Write Tape to ADDTM
             tape_input = format(ovr,'b') + a + b + '2' + '_'
@@ -75,7 +76,7 @@ class PPEXE(object):
             res = out[4]
 
             # Write back overflow bit and dst bit
-            self.api.reg_write(self._ovr_reg, ovr)
+            self.api.reg_write(self._ovr_bit, ovr)
             d = self.api.reg_read(dst)
             self.api.reg_write(dst, int(res + format(d, '08b'), 2))
 
@@ -94,12 +95,12 @@ class PPEXE(object):
         sstr = format(sstr, '08b')
 
         # initialize overflow flag to 0
-        self.api.reg_write(self._ovr_reg, 0)
+        self.api.reg_write(self._ovr_bit, 0)
 
         for i in range(1,9):    # todo: sad conditional
             a = dstr[-i]
             b = sstr[-i]
-            ovr = self.api.reg_read(self._ovr_reg)
+            ovr = self.api.reg_read(self._ovr_bit)
 
             # Write Tape to SUBTM
             tape_input = format(ovr,'b') + a + b + '2' + '_' + '2'
@@ -114,12 +115,18 @@ class PPEXE(object):
             res = out[3]
 
             # Write back overflow bit and dst bit
-            self.api.reg_write(self._ovr_reg, ovr)
+            self.api.reg_write(self._ovr_bit, ovr)
             d = self.api.reg_read(dst)
             self.api.reg_write(dst, int(res + format(d, '08b'), 2))
 
+        # set isz_bit
+        if self.api.reg_read(dst) == 0: # cond handled by wiring
+            self.api.reg_write(self._isz_bit, 1)
+        else:
+            self.api.reg_write(self._isz_bit, 0)
+
     def load(self,dst,src):
-        if self.is_int(src):
+        if self.is_int(src):  # cond handled by wiring
             src_val = int(src)
         else:
             src_val = self.api.reg_read(src)
@@ -128,7 +135,7 @@ class PPEXE(object):
         self.api.reg_write(dst, val)
 
     def store(self,src,dst):
-        if self.is_int(src):
+        if self.is_int(src):  # cond handled by wiring
             dst_val = int(src)
         else:
             dst_val = self.api.reg_read(src)
@@ -138,6 +145,10 @@ class PPEXE(object):
 
     def jmp(jmp):
         self.api.update_instr_ptr(jmp)
+
+    def jeq(jmp, dst, src):
+        sub()
+
 
     def execute(self):
         ''' Execute commands until end of ppasm instruction list '''
