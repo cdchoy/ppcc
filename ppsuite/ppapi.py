@@ -77,12 +77,12 @@ class PPAPI:
         ip_num = int(instr_cache_slide.Shapes(1).TextFrame.TextRange.Text)
         instr_cache_slide.Shapes(1).TextFrame.TextRange.Text = str(ip_num + 1)
 
-        return instr_cache_slide.Shapes(ip_num).TextFrame.TextRange.Text
+        return instr_cache_slide.Shapes(ip_num + 1).TextFrame.TextRange.Text
 
     #updates instruction counter
     def update_instr_ptr(self, new_num):
         instr_cache_slide = self.pres.Slides(self.INSTR_CACHE)
-        instr_cache_slide.Shapes(1).TextFrame.TextRange.Text = str(new_num)
+        instr_cache_slide.Shapes(1).TextFrame.TextRange.Text = str(int(new_num) + 1)
 
     # Initializes the register page
     def init_register(self):
