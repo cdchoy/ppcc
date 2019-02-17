@@ -16,14 +16,34 @@ class PPAPI:
         self.ADD = 7
         self.SUB = 8
 
+        self.reg_table = {
+            "A": 0,
+            "B": 1,
+            "C": 2, 
+            "D": 3,
+            "SP": 4,
+            "BP": 5,
+            "OVR": 6,
+            "ISZ": 7
+        }
+
         if self.pres.Slides.Count == self.NUM_TURING_SLIDES:
             self.init_mem()
             self.init_register()
-            self.init_inst_cache()
+            # self.init_inst_cache()
+
+    def is_int(self, val):
+        ''' Checks if a value in a string can be converted to int '''
+        try:
+            int(val)
+            return True
+        except ValueError:
+            return False
 
     #init instr cache page
     def init_inst_cache(self):
         self.pres.Slides.Add(self.INSTR_CACHE, 12)
+        self.pres.SlideShowWindow.View.GoToSlide(self.INSTR_CACHE)
 
         slide = self.pres.Slides(self.INSTR_CACHE)
 
@@ -32,10 +52,11 @@ class PPAPI:
                                 Top=20,
                                 Width=300,
                                 Height=30)
-        slide.Shapes(1).TextFrame.TextRange.Text = "0"
+        slide.Shapes(1).TextFrame.TextRange.Text = "1"
 
     #loads program from ppasm file
     def load_ppasm(self, file_path):
+        self.pres.SlideShowWindow.View.GoToSlide(self.INSTR_CACHE)
         instr_cache_slide = self.pres.Slides(self.INSTR_CACHE)
         shape_num = 2
 
@@ -81,7 +102,10 @@ class PPAPI:
             textframe.TextRange.Text = "X{}: 0".format(reg_num - 1)
 
     # Writes a val to a register
-    def reg_write(self, reg_num, val):
+    def reg_write(self, reg_name, val):
+        print(reg_name)
+        reg_num = self.reg_table[reg_name]
+
         self.pres.SlideShowWindow.View.GoToSlide(self.REG)
 
         slide = self.pres.Slides(self.REG)
@@ -90,7 +114,11 @@ class PPAPI:
         textframe.TextRange.Text = "X{}: {}".format(reg_num,val)
 
     # Reads a val from a register
-    def reg_read(self, reg_num):
+    def reg_read(self, reg_name):
+        print(reg_name)
+
+        reg_num = self.reg_table[reg_name]
+
         self.pres.SlideShowWindow.View.GoToSlide(self.REG)
 
         slide = self.pres.Slides(self.REG)

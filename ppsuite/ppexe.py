@@ -5,7 +5,8 @@
 
 import sys  # only for sys.exit()
 import win32com.client
-from ppsuite.ppapi import PPAPI
+from ppapi import PPAPI
+import time
 
 # Stretch Goal Ops:
 #     putc src
@@ -17,8 +18,8 @@ from ppsuite.ppapi import PPAPI
 
 class PPEXE(object):
 
-    _ovr_bit = 6  # over/underflow register for add/sub
-    _isz_bit = 7  # isZero flag
+    _ovr_bit = "OVR"  # over/underflow register for add/sub
+    _isz_bit = "ISZ"  # isZero flag
 
     def __init__(self,ppt,filepath):
         self.api = PPAPI(ppt)
@@ -46,15 +47,14 @@ class PPEXE(object):
 
     def add(self,dst,src):
         if self.is_int(src):
-            src_val = int(src)
+            sstr = src
         else:
-            src_val = self.api.reg_read(src)
+            sstr = self.api.reg_read(src)
 
         dstr = self.api.reg_read(dst)
-        sstr = self.api.reg_read(src_val)
         # convert int to binary string
-        dstr = format(dstr, '08b')
-        sstr = format(sstr, '08b')
+        dstr = format(int(dstr), '08b')
+        sstr = format(int(sstr), '08b')
 
         # initialize overflow flag to 0
         self.api.reg_write(self._ovr_bit, 0)
@@ -85,15 +85,14 @@ class PPEXE(object):
 
     def sub(self,dst,src):
         if self.is_int(src):
-            src_val = int(src)
+            sstr = src
         else:
-            src_val = self.api.reg_read(src)
+            sstr = self.api.reg_read(src)
 
         dstr = self.api.reg_read(dst)
-        sstr = self.api.reg_read(src_val)
         # convert int to binary string
-        dstr = format(dstr, '08b')
-        sstr = format(sstr, '08b')
+        dstr = format(int(dstr), '08b')
+        sstr = format(int(sstr), '08b')
 
         # initialize overflow flag to 0
         self.api.reg_write(self._ovr_bit, 0)
@@ -225,43 +224,45 @@ class PPEXE(object):
             instr = self.api.get_next_instr()
             args = instr.split(' ')
 
+            print("Processing: {}".format(instr))
+
             # Dispatch Table
             if args[0] == 'mov':
-                self.mov(args[1][:-1], args[2])
+                self.mov(args[1][:-1], args[2][:-1])
             elif args[0] == 'add':
-                self.add(args[1][:-1], args[2])
+                self.add(args[1][:-1], args[2][:-1])
             elif args[0] == 'sub':
-                self.sub(args[1][:-1], args[2])
+                self.sub(args[1][:-1], args[2][:-1])
             elif args[0] == 'load':
-                self.load(args[1][:-1], args[2])
+                self.load(args[1][:-1], args[2][:-1])
             elif args[0] == 'store':
-                self.store(args[1][:-1], args[2])
+                self.store(args[1][:-1], args[2][:-1])
             elif args[0] == 'eq':
-                self.eq(args[1][:-1], args[2])
+                self.eq(args[1][:-1], args[2][:-1])
             elif args[0] == 'ne':
-                self.ne(args[1][:-1], args[2])
+                self.ne(args[1][:-1], args[2][:-1])
             elif args[0] == 'lt':
-                self.lt(args[1][:-1], args[2])
+                self.lt(args[1][:-1], args[2][:-1])
             elif args[0] == 'gt':
-                self.gt(args[1][:-1], args[2])
+                self.gt(args[1][:-1], args[2][:-1])
             elif args[0] == 'le':
-                self.le(args[1][:-1], args[2])
+                self.le(args[1][:-1], args[2][:-1])
             elif args[0] == 'ge':
-                self.ge(args[1][:-1], args[2])
+                self.ge(args[1][:-1], args[2][:-1])
             elif args[0] == 'jmp':
-                self.jmp(args[1])
+                self.jmp(args[1][:-1])
             elif args[0] == 'jeq':
-                self.jeq(args[1][:-1], args[2][:-1], args[3])
+                self.jeq(args[1][:-1], args[2][:-1], args[3][:-1])
             elif args[0] == 'jne':
-                self.jne(args[1][:-1], args[2][:-1], args[3])
+                self.jne(args[1][:-1], args[2][:-1], args[3][:-1])
             elif args[0] == 'jlt':
-                self.jlt(args[1][:-1], args[2][:-1], args[3])
+                self.jlt(args[1][:-1], args[2][:-1], args[3][:-1])
             elif args[0] == 'jgt':
-                self.jgt(args[1][:-1], args[2][:-1], args[3])
+                self.jgt(args[1][:-1], args[2][:-1], args[3][:-1])
             elif args[0] == 'jle':
-                self.jle(args[1][:-1], args[2][:-1], args[3])
+                self.jle(args[1][:-1], args[2][:-1], args[3][:-1])
             elif args[0] == 'jge':
-                self.jge(args[1][:-1], args[2][:-1], args[3])
+                self.jge(args[1][:-1], args[2][:-1], args[3][:-1])
             elif args[0] == 'exit':
                 break
 
@@ -271,13 +272,14 @@ class PPEXE(object):
 if __name__ == "__main__":
     Application = win32com.client.Dispatch("PowerPoint.Application")
     Application.Visible = True
+    time.sleep(8)
     ppt = Application.ActivePresentation
 
-    if len(sys.argv != 3):
+    if len(sys.argv) != 2:
         print("USAGE: $ python3 ppexe.py [.ppasm file]")
         sys.exit(1)
 
-    fp = sys.argv[2]
+    fp = sys.argv[1]
 
     ppexe = PPEXE(ppt,fp)
     ppexe.execute()
