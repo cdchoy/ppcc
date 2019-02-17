@@ -24,7 +24,7 @@ And so in 2019, we are proud to introduce the PPSuite, a collection of software 
 ## Motivations
 
 * no one tried to stop us
-* never stopped to consider if we *should*
+* strong desire to reinvent the wheel but worse
 * good memes
 
 ## The Team
@@ -53,6 +53,13 @@ We convert C language to PPASM, our custom assembly language for interfacing wit
 PPEXE <-> PPAPI <-> PPCPU
 
 We parse through custom assembly language PPASM using PPEXE, a Python executor that functions solely to make ordered calls to our PPAPI. PPAPI utilizes [AutoHotKey](https://www.autohotkey.com/) to abstract out the human clicker required for manually executing cycles in the PPTXTM.
+
+## Usage
+
+To use our PPSuite, a user will need to write a C file, say foo.c, and then the following commands:
+
+$ ppcc foo.c  
+$ ppexe foo.ppasm  
 
 ## Challenges
 

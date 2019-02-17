@@ -5,7 +5,7 @@
 
 import sys  # only for sys.exit()
 import win32com.client
-from ppapi import PPAPI
+from ppsuite import PPAPI
 
 # Stretch Goal Ops:
 #     putc src
@@ -22,23 +22,46 @@ class PPEXE(object):
     def __init__(self,ppt,filepath):
         self.api = PPAPI(ppt)
 
+    def is_int(self, val):
+        ''' Checks if a value in a string can be converted to int '''
+        try: 
+            int(val)
+            return True
+        except ValueError:
+            return False
+
+    def load_instructions(self):
+        ''' Read in ppasm instructions from pptx slide '''
+        pass
+
+    def execute_instructions(self):
+        ''' Execute commands until end of ppasm instruction list '''
         # Load instructions into PPCPU
         self.api.init_inst_cache()
-        self.api.load_ppasm(filepath)
+        # self.api.load_ppasm(filepath)
 
     def mov(self,dst,src):
-        val = self.api.reg_read(dst)
+        if self.is_int(src):
+            val = int(src)
+        else:
+            val = self.api.reg_read(src)
+
         self.api.reg_write(dst, val)
 
     def add(self,dst,src):
+        if self.is_int(src):
+            src_val = int(src)
+        else:
+            src_val = self.api.reg_read(src)
+
         dstr = self.api.reg_read(dst)
-        sstr = self.api.reg_read(src)
+        sstr = self.api.reg_read(src_val)
         # convert int to binary string
         dstr = format(dstr, '08b')
         sstr = format(sstr, '08b')
 
         # initialize overflow flag to 0
-        self.api.reg_write(_ovr_reg, 0)
+        self.api.reg_write(self.api._ovr_reg, 0)
 
         for i in range(1,9):    # todo: sad conditional
             a = dstr[-i]
@@ -47,7 +70,7 @@ class PPEXE(object):
 
             # Write Tape to ADDTM
             tape_input = format(ovr,'b') + a + b + '2' + '_'
-            self.api.tape_write_raw(self.api.alu_add, tape_input)
+            self.api.tape_write_raw(self.api.ADD, tape_input)
 
             # Execute Tape
             self.api.execute()
@@ -65,14 +88,19 @@ class PPEXE(object):
         return
 
     def sub(self,dst,src):
+        if self.is_int(src):
+            src_val = int(src)
+        else:
+            src_val = self.api.reg_read(src)
+
         dstr = self.api.reg_read(dst)
-        sstr = self.api.reg_read(src)
+        sstr = self.api.reg_read(src_val)
         # convert int to binary string
         dstr = format(dstr, '08b')
         sstr = format(sstr, '08b')
 
         # initialize overflow flag to 0
-        self.api.reg_write(_ovr_reg, 0)
+        self.api.reg_write(self.api._ovr_reg, 0)
 
         for i in range(1,9):    # todo: sad conditional
             a = dstr[-i]
@@ -81,7 +109,7 @@ class PPEXE(object):
 
             # Write Tape to SUBTM
             tape_input = format(ovr,'b') + a + b + '2' + '_' + '2'
-            self.api.tape_write_raw(self.api.alu_sub, tape_input)
+            self.api.tape_write_raw(self.api.SUB, tape_input)
 
             # Execute Tape
             self.api.execute()
@@ -97,12 +125,22 @@ class PPEXE(object):
             self.api.reg_write(dst, int(res + format(d, '08b'), 2))
 
     def load(self,dst,src):
-        val = self.api.reg_read(src)  # todo: src could be mem. write isreg()
+        if self.is_int(src):
+            src_val = int(src)
+        else:
+            src_val = self.api.reg_read(src)
+
+        val = self.api.mem_read(src_val)  # todo: src could be mem. write isreg()
         self.api.reg_write(dst, val)
 
     def store(self,src,dst):
+        if self.is_int(src):
+            dst_val = int(src)
+        else:
+            dst_val = self.api.reg_read(src)
+
         val = self.api.reg_read(src)  # todo: src could be mem. write isreg()
-        self.api.reg_write(dst, val)
+        self.api.mem_write(dst_val, val)
 
     def exit(self):
         sys.exit(0)
