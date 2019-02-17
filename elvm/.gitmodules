@@ -1,0 +1,9 @@
+[submodule "8cc"]
+	path = 8cc
+	url = https://github.com/shinh/8cc
+[submodule "Whitespace"]
+	path = Whitespace
+	url = https://github.com/koturn/Whitespace
+[submodule "tinycc"]
+	path = tinycc
+	url = http://repo.or.cz/tinycc.git
