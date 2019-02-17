@@ -4,7 +4,7 @@
 # PPASM -> PPAPI
 
 import sys  # only for sys.exit()
-import ppapi as api
+from ppapi import PPAPI
 
 # Stretch Goal Ops:
 #     putc src
@@ -14,24 +14,10 @@ import ppapi as api
 #     eq/ne/lt/gt/le/ge dst,src
 #     dump
 
-# PPCPU Page Index
-pages = {
-    "mem1" : 0,
-    "mem2" : 1,
-    "reg"  : 2,
-    "asm"  : 3,
-    "succ" : 4,
-    "pred" : 5,
-    "add"  : 6,
-    "sub"  : 7,
-}
-
-
 class PPEXE(object):
 
     def __init__():
-        self.ppt = None
-        pass
+        self.api = PPAPI()
 
     def load_instructions():
         ''' Read in ppasm instructions from pptx slide '''
@@ -42,36 +28,36 @@ class PPEXE(object):
         pass
 
     def mov(dst,src):
-        val = api.reg_read(self.ppt, dst)
-        api.reg_write(self.ppt, dst, val)
+        val = self.api.reg_read(self.ppt, dst)
+        self.api.reg_write(self.ppt, dst, val)
 
     def add(dst,src):
-        a = api.reg_read(self.ppt, dst)
-        b = api.reg_read(self.ppt, src)
-
+        a = self.api.reg_read(self.ppt, dst)
+        b = self.api.reg_read(self.ppt, src)
+        # int -> binary string
         a = format(a, 'b')
         b = format(b, 'b')
 
         pass
 
     def sub(dst,src):
-        a = api.reg_read(self.ppt, dst)
-        b = api.reg_read(self.ppt, src)
+        a = self.api.reg_read(self.ppt, dst)
+        b = self.api.reg_read(self.ppt, src)
 
 
         pass
 
     def load(dst,src):
-        val = api.reg_read(self.ppt, src)  # todo: src could be mem. write isreg()
-        api.reg_write(self.ppt, dst, val)
+        val = self.api.reg_read(self.ppt, src)  # todo: src could be mem. write isreg()
+        self.api.reg_write(self.ppt, dst, val)
 
     def store(src,dst):
-        val = api.reg_read(self.ppt, src)  # todo: src could be mem. write isreg()
-        api.reg_write(self.ppt, dst, val)
+        val = self.api.reg_read(self.ppt, src)  # todo: src could be mem. write isreg()
+        self.api.reg_write(self.ppt, dst, val)
 
     def exit():
         sys.exit()
 }
 
 if __name__ == "__main__":
-    pass
+    p = PPEXE()
