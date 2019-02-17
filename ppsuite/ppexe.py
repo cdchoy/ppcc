@@ -73,8 +73,8 @@ class PPEXE(object):
 
             # Read Tape
             out = self.api.tape_read_raw()
-            ovr = out[3]
-            res = out[4]
+            ovr = out[4]
+            res = out[3]
 
             # Write back overflow bit and dst bit
             self.api.reg_write(self._ovr_bit, ovr)
