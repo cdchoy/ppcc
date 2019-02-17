@@ -42,7 +42,7 @@ class PPEXE(object):
         sstr = format(sstr, '08b')
 
         # initialize overflow flag to 0
-        self.api.reg_write(_ovr_reg, 0)
+        self.api.reg_write(self._ovr_reg, 0)
 
         for i in range(1,9):    # todo: sad conditional
             a = dstr[-i]
@@ -51,7 +51,7 @@ class PPEXE(object):
 
             # Write Tape to ADDTM
             tape_input = format(ovr,'b') + a + b + '2' + '_'
-            self.api.tape_write_raw(self.api.alu_add, tape_input)
+            self.api.tape_write_raw(self.api.SLIDE_ADD, tape_input)
 
             # Execute Tape
             self.api.execute()
@@ -76,7 +76,7 @@ class PPEXE(object):
         sstr = format(sstr, '08b')
 
         # initialize overflow flag to 0
-        self.api.reg_write(_ovr_reg, 0)
+        self.api.reg_write(self._ovr_reg, 0)
 
         for i in range(1,9):    # todo: sad conditional
             a = dstr[-i]
@@ -85,7 +85,7 @@ class PPEXE(object):
 
             # Write Tape to SUBTM
             tape_input = format(ovr,'b') + a + b + '2' + '_' + '2'
-            self.api.tape_write_raw(self.api.alu_sub, tape_input)
+            self.api.tape_write_raw(self.api.SLIDE_SUB, tape_input)
 
             # Execute Tape
             self.api.execute()

@@ -10,7 +10,13 @@ class PPAPI:
         self.SLIDE_MEM_1 = 2
         self.SLIDE_REG = 3
         self.INSTR_CACHE = 4
-        self.NUM_TURING_SLIDES = 3 #Chane this
+
+        self.NUM_TURING_SLIDES = 4 #Chane this
+        self.SLIDE_SUCC = 5
+        self.SLIDE_PRED = 6
+        self.SLIDE_ADD = 7
+        self.SLIDE_SUB = 8
+        
 
         if self.pres.Slides.Count == self.NUM_TURING_SLIDES:
             self.init_mem()
