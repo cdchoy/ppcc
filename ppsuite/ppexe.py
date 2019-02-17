@@ -5,7 +5,9 @@
 
 import sys  # only for sys.exit()
 import win32com.client
-from ppsuite.ppapi import PPAPI
+import win32gui
+from ppapi import PPAPI
+from windowmngr import WindowMgr
 
 # Stretch Goal Ops:
 #     putc src
@@ -168,7 +170,15 @@ class PPEXE(object):
 if __name__ == "__main__":
     Application = win32com.client.Dispatch("PowerPoint.Application")
     Application.Visible = True
+
     ppt = Application.ActivePresentation
+
+    w = WindowMgr()
+    w.find_window_wildcard(".*PPCPU.*", True)
+    w.set_foreground()
+
+    ppt.SlideShowSettings.Run.View.AcceleratorsEnabled = False
+
 
     if len(sys.argv != 3):
         print("USAGE: $ python3 ppexe.py [.ppasm file]")

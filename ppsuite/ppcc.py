@@ -18,7 +18,7 @@ class PPCC:
         return args.file_path
 
     def compile_program(self, file_path):
-        subprocess.call(["./elvm/8cc/8cc", file_path, "-S"])
+        subprocess.call(["../elvm/8cc/8cc", file_path, "-S"])
 
     def convert_elir_to_ppasm(self, file_name):
         line_num = 0
@@ -67,6 +67,6 @@ class PPCC:
 
 
 if __name__ == '__main__':
-    
+
     asm = PPCC()
     asm.compile()
