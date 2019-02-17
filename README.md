@@ -38,3 +38,7 @@ We convert C language to PPASM, our custom assembly language for interfacing wit
 #### Executing the Instruction List
 
 We parse through custom assembly language PPASM using PPEXEC, a Python executor that functions solely to make ordered calls to our PPAPI. PPAPI utilizes [AutoHotKey](https://www.autohotkey.com/) to abstract out the human clicker required for manually executing cycles in PPTXTM.
+
+## Challenges
+
+PPTXTM's tape length is unfortunately finite. In this implementation, we wrote all code to function on a Turing Machine with a relatively small 8 bits and 8 states.
