@@ -3,7 +3,6 @@
 ; All of the random numbers are X, Y coordinates of items 
 ; on the powerpoint in a 1920x1080 resolution
 ; Have fun if that's not your resolution
-sleep 20000
 
 Loop, 8 {
     sleep 500
