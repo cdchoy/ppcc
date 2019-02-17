@@ -22,23 +22,17 @@ class PPEXE(object):
     def __init__(self,ppt,filepath):
         self.api = PPAPI(ppt)
 
+        # Load ppasm into ppcpu
+        self.api.init_inst_cache()
+        self.api.load_ppasm(filepath)
+
     def is_int(self, val):
         ''' Checks if a value in a string can be converted to int '''
-        try: 
+        try:
             int(val)
             return True
         except ValueError:
             return False
-
-    def load_instructions(self):
-        ''' Read in ppasm instructions from pptx slide '''
-        pass
-
-    def execute_instructions(self):
-        ''' Execute commands until end of ppasm instruction list '''
-        # Load instructions into PPCPU
-        self.api.init_inst_cache()
-        # self.api.load_ppasm(filepath)
 
     def mov(self,dst,src):
         if self.is_int(src):
@@ -147,7 +141,7 @@ class PPEXE(object):
 
     def execute(self):
         ''' Execute commands until end of ppasm instruction list '''
-        
+
         return
 
 if __name__ == "__main__":
