@@ -83,7 +83,7 @@ class PPEXE(object):
             self.api.reg_write(self._ovr_bit, ovr)
             d = self.api.reg_read(dst)
             if (i == 1):
-                self.api.reg_write(dst, int(res + format(d, 'b'), 2))
+                self.api.reg_write(dst, int(res))
             else:
                 self.api.reg_write(dst, int(res + bin(d)[2:].zfill(i - 1), 2))
 
@@ -130,7 +130,7 @@ class PPEXE(object):
             print("d is {}".format(d))
             print("Writing: {}".format(res + format(d, 'b')))
             if (i == 1):
-                self.api.reg_write(dst, int(res + format(d, 'b'), 2))
+                self.api.reg_write(dst, int(res))
             else:
                 self.api.reg_write(dst, int(res + bin(d)[2:].zfill(i - 1), 2))
 
@@ -308,7 +308,7 @@ class PPEXE(object):
                 self.jle(args[1][:-1], args[2][:-1], args[3][:-1])
             elif args[0] == 'jge':
                 self.jge(args[1][:-1], args[2][:-1], args[3][:-1])
-            elif args[0] == 'exit':
+            elif args[0].rstrip('\n') == 'exit':
                 break
 
         # todo: read from stdout buffer

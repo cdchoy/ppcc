@@ -70,6 +70,7 @@ class PPAPI:
                                                         Top=20 * shape_num,
                                                         Width=300,
                                                         Height=30)
+                print(asm_line.split('\t'))
                 instr_cache_slide.Shapes(shape_num).TextFrame.TextRange.Text = asm_line.split('\t')[2]
                 shape_num += 1
 

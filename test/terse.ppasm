@@ -1,3 +1,5 @@
 0		mov A, 5
-1		add A, 3
-2		exit
+1		mov B, 3
+2		add B, A
+3		store B, 8
+4		exit
