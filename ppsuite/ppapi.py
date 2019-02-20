@@ -235,7 +235,7 @@ class PPAPI:
         ahk_teardown.wait()
 
     # Need to find the delete function for slides
-    def teardown(self):pres.SlideShowWindow.View.GoToSlide
+    def teardown(self):
         self.pres.Slides.Delete(1) # MEM_0
         self.pres.Slides.Delete(1) # MEM_1
         self.pres.Slides.Delete(1) # REG
