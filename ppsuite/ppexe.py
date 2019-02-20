@@ -59,7 +59,7 @@ class PPEXE(object):
 
         # initialize overflow flag to 0
         self.api.reg_write(self._ovr_bit, 0)
-        self.api.reg_write(dst, 0)
+        self.api.reg_write_raw(dst, "")
 
         for i in range(1,9):    # todo: sad conditional
             a = dstr[-i]
@@ -79,10 +79,10 @@ class PPEXE(object):
             res = out[4]
 
             # Write back overflow bit and dst bit
-            self.api.reg_write(self._ovr_bit, ovr)
+            self.api.reg_write(self._ovr_bit, int(ovr))
             d = self.api.reg_read_raw(dst)
             d = str(res) + d
-            self.api.reg_write_raw(dst, res)
+            self.api.reg_write_raw(dst, d)
 
 
         return
@@ -99,7 +99,7 @@ class PPEXE(object):
 
         # initialize overflow flag to 0
         self.api.reg_write(self._ovr_bit, 0)
-        self.api.reg_write(dst, 0)
+        self.api.reg_write_raw(dst, "")
 
         for i in range(1,9):    # todo: sad conditional
             a = dstr[-i]
@@ -109,7 +109,7 @@ class PPEXE(object):
             # Write Tape to SUBTM
             tape_input = format(ovr,'b') + a + b + '2' + '_' + '2'
             self.api.tape_write_raw(self.api.SUB, tape_input)
-            print("tape input: {}".format(tape_input))
+
             # Execute Tape
             self.api.execute()
 
@@ -117,13 +117,12 @@ class PPEXE(object):
             out = self.api.tape_read_raw()
             ovr = out[4]  # flipped from add for sub
             res = out[3]
-            print("tape output: res {} ovr {}".format(res, ovr))
 
             # Write back overflow bit and dst bit
-            self.api.reg_write(self._ovr_bit, ovr)
+            self.api.reg_write(self._ovr_bit, int(ovr))
             d = self.api.reg_read_raw(dst)
             d = str(res) + d
-            self.api.reg_write_raw(dst, res)
+            self.api.reg_write_raw(dst, d)
 
         # set isz_bit
         if self.api.reg_read(dst) == 0: # cond handled by wiring
