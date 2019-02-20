@@ -49,14 +49,13 @@ class PPEXE(object):
 
     def add(self,dst,src):
         if self.is_int(src):
-            sstr = src
+            src_val = src
         else:
-            sstr = self.api.reg_read(src)
+            src_val = self.api.reg_read(src)
 
-        dstr = self.api.reg_read(dst)
+        dstr = self.api.reg_read_raw(dst)
         # convert int to binary string
-        dstr = format(int(dstr), '08b')
-        sstr = format(int(sstr), '08b')
+        sstr = format(src_val, '08b')
 
         # initialize overflow flag to 0
         self.api.reg_write(self._ovr_bit, 0)
@@ -81,26 +80,22 @@ class PPEXE(object):
 
             # Write back overflow bit and dst bit
             self.api.reg_write(self._ovr_bit, ovr)
-            d = self.api.reg_read(dst)
-            if (i == 1):
-                self.api.reg_write(dst, int(res))
-            else:
-                self.api.reg_write(dst, int(res + bin(d)[2:].zfill(i - 1), 2))
+            d = self.api.reg_read_raw(dst)
+            d = str(res) + d
+            self.api.reg_write_raw(dst, res)
+
 
         return
 
     def sub(self,dst,src):
         if self.is_int(src):
-            sstr = src
+            src_val = src
         else:
-            sstr = self.api.reg_read(src)
+            src_val = self.api.reg_read(src)
 
-        dstr = self.api.reg_read(dst)
-        print("Subtracting {} from {}".format(sstr, dstr))
+        dstr = self.api.reg_read_raw(dst)
         # convert int to binary string
-        dstr = format(int(dstr), '08b')
-        sstr = format(int(sstr), '08b')
-        print("subtracting {} from {}".format(sstr, dstr))
+        sstr = format(src_val, '08b')
 
         # initialize overflow flag to 0
         self.api.reg_write(self._ovr_bit, 0)
@@ -126,13 +121,9 @@ class PPEXE(object):
 
             # Write back overflow bit and dst bit
             self.api.reg_write(self._ovr_bit, ovr)
-            d = self.api.reg_read(dst)
-            print("d is {}".format(d))
-            print("Writing: {}".format(res + format(d, 'b')))
-            if (i == 1):
-                self.api.reg_write(dst, int(res))
-            else:
-                self.api.reg_write(dst, int(res + bin(d)[2:].zfill(i - 1), 2))
+            d = self.api.reg_read_raw(dst)
+            d = str(res) + d
+            self.api.reg_write_raw(dst, res)
 
         # set isz_bit
         if self.api.reg_read(dst) == 0: # cond handled by wiring
