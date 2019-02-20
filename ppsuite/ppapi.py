@@ -43,9 +43,9 @@ class PPAPI:
             return False
 
     # Pulls up a slide
-    def show_slide(self, slide, time=.5):
+    def show_slide(self, slide, wait=.5):
         self.pres.SlideShowWindow.View.GoToSlide(slide)
-        time.sleep(time)
+        time.sleep(wait)
         return self.pres.Slides(slide)
 
     #init instr cache page
@@ -123,8 +123,7 @@ class PPAPI:
 
     # Converts a value to binary string, then writes to a register
     def reg_write(self, reg_name, val):
-        bin_val = format(val, '08b')
-        raw = bin_val[2:]
+        raw = format(val, '08b')
         self.reg_write_raw(reg_name, raw)
 
     # Reads a string from a register
@@ -193,8 +192,7 @@ class PPAPI:
 
     # Converts a value to hex string, then writes to memory
     def mem_write(self, mem_loc, val):
-        hex_val = hex(val)
-        raw = hex_val[2:]
+        raw = hex(val)
         self.mem_write_raw(mem_loc, raw)
 
     # Reads a string from memory
@@ -218,7 +216,8 @@ class PPAPI:
     # then converts it to an int
     def mem_read(self, mem_loc):
         raw = self.reg_read_raw(mem_loc)
-        val = int(raw, 16)
+        no_hex_prefix = raw[2:]
+        val = int(no_hex_prefix, 16)
 
         return val
 
