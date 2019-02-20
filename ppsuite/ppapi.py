@@ -75,7 +75,6 @@ class PPAPI:
                                                         Top=20 * shape_num,
                                                         Width=300,
                                                         Height=30)
-                print(asm_line.split('\t'))
                 slide.Shapes(shape_num).TextFrame.TextRange.Text = asm_line.split('\t')[2]
                 shape_num += 1
 
@@ -109,13 +108,12 @@ class PPAPI:
 
             textframe = slide.Shapes(reg_num).TextFrame
             if (reg_num == (self.reg_table['SP'] + 1)):
-                textframe.TextRange.Text = "X{}: 255".format(reg_num - 1)
+                textframe.TextRange.Text = "X{}: 11111111".format(reg_num - 1)
             else:
-                textframe.TextRange.Text = "X{}: 0".format(reg_num - 1)
+                textframe.TextRange.Text = "X{}: 00000000".format(reg_num - 1)
 
-    # Writes a val to a register
+    # Writes a string to a register
     def reg_write_raw(self, reg_name, val):
-        print(reg_name)
         reg_num = self.reg_table[reg_name]
 
         slide = self.show_slide(self.REG)
@@ -123,16 +121,29 @@ class PPAPI:
 
         textframe.TextRange.Text = "X{}: {}".format(reg_num,val)
 
-    # Reads a val from a register
-    def reg_read_raw(self, reg_name):
-        print(reg_name)
+    # Converts a value to binary string, then writes to a register
+    def reg_write(self, reg_name, val):
+        bin_val = bin(val)
+        raw = bin_val[2:]
+        self.reg_write_raw(reg_name, raw)
 
+    # Reads a string from a register
+    def reg_read_raw(self, reg_name):
         reg_num = self.reg_table[reg_name]
 
         slide = self.show_slide(self.REG)
-
         textframe = slide.Shapes(reg_num + 1).TextFrame
-        val = int(textframe.TextRange.Text[4:])
+
+        strip_len = len(str(reg_num)) + 3
+        val = textframe.TextRange.Text[strip_len:]
+
+        return val
+
+    # Reads a binary string from a register, 
+    # then converts it to an int
+    def reg_read(self, reg_name):
+        raw = self.reg_read_raw(reg_name)
+        val = int(raw, 2)
 
         return val
 
@@ -166,7 +177,7 @@ class PPAPI:
             textframe_1.TextRange.Font.Size = 10
             textframe_1.TextRange.Text = "{}: {}".format(hex(reg_num - 1 + 128), hex(0))
 
-    # Writes a val to mem
+    # Writes a string to memory
     def mem_write_raw(self, mem_loc, val):
         mem_loc_real = mem_loc
         slide_num = self.MEM_0
@@ -178,9 +189,15 @@ class PPAPI:
         slide = self.show_slide(slide_num)
         textframe = slide.Shapes(mem_loc_real + 1).TextFrame
 
-        textframe.TextRange.Text = "{}: {}".format(hex(mem_loc), hex(val))
+        textframe.TextRange.Text = "{}: {}".format(hex(mem_loc), val)
 
-    # Reads a val from mem
+    # Converts a value to hex string, then writes to memory
+    def mem_write(self, mem_loc, val):
+        hex_val = hex(val)
+        raw = hex_val[2:]
+        self.mem_write_raw(mem_loc, raw)
+
+    # Reads a string from memory
     def mem_read_raw(self, mem_loc):
         mem_loc_real = mem_loc
         slide_num = self.MEM_0
@@ -193,10 +210,15 @@ class PPAPI:
         textframe = slide.Shapes(mem_loc_real + 1).TextFrame
 
         strip_len = len(hex(mem_loc)) + 2
-        # lol don't store data as hex strings
-        val = int(str(bin(int(textframe.TextRange.Text[strip_len:], 16)))[2:])
+        val = textframe.TextRange.Text[strip_len:]
 
-        print(val)
+        return val
+
+    # Reads a binary string from a register, 
+    # then converts it to an int
+    def mem_read(self, mem_loc):
+        raw = self.reg_read_raw(mem_loc)
+        val = int(raw, 16)
 
         return val
 
@@ -217,7 +239,6 @@ class PPAPI:
                                 "hotkey/tape_read.ahk"], stdout=subprocess.PIPE)
         ahk.wait()
         out = ahk.stdout.read().decode()
-        print(out)
 
         return out
 
