@@ -123,7 +123,7 @@ class PPAPI:
 
     # Converts a value to binary string, then writes to a register
     def reg_write(self, reg_name, val):
-        bin_val = bin(val)
+        bin_val = format(val, '08b')
         raw = bin_val[2:]
         self.reg_write_raw(reg_name, raw)
 
