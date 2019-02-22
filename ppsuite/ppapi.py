@@ -10,11 +10,14 @@ class PPAPI:
             self.mem_0 = []
             self.mem_1 = []
             self.instr = []
-            self.tape = []
+            self.tape = ['_', '_', '_', '_', '_', '_', '_', '_']
             self.virtual = True
-        else pres != None:
+            self.tape_loc = -1
+
+        else:
             self.pres = pres
             self.virtual = False
+            self.tape_loc = -1 # unused (virtual only)
 
         self.MEM_0 = 1
         self.MEM_1 = 2
@@ -39,7 +42,7 @@ class PPAPI:
             "TMP": 8
         }
 
-        if self.pres.Slides.Count == self.NUM_TURING_SLIDES:
+        if self.virtual or self.pres.Slides.Count == self.NUM_TURING_SLIDES:
             self.init_mem()
             self.init_register()
             # self.init_inst_cache()
@@ -87,7 +90,7 @@ class PPAPI:
             for asm_line in f:
                 txt = asm_line.split('\t')[2]
 
-                if virtual:
+                if self.virtual:
                     self.instr.append(txt)
 
                 else:
@@ -215,8 +218,8 @@ class PPAPI:
             txt_1 = "{}: {}".format(hex(reg_num - 1), hex(0))
 
             if self.virtual:
-                mem_0.append(txt_0)
-                mem_1.append(txt_1)
+                self.mem_0.append(txt_0)
+                self.mem_1.append(txt_1)
 
             else:
                 slide_0.Shapes.AddTextbox(Orientation=0x1,
@@ -254,6 +257,8 @@ class PPAPI:
                 self.mem_0[mem_loc_real] = txt
             else:
                 self.mem_1[mem_loc_real] = txt
+
+            print("Wrote {}".format(txt))
 
         else:
             slide = self.show_slide(slide_num)
@@ -301,37 +306,71 @@ class PPAPI:
         return val
 
     def tape_write_raw(self, tape_loc, val):
-        self.show_slide(tape_loc)
-
         lst = list(val)
-        args = ["C:/Program Files/AutoHotkey/AutoHotkeyU64.exe",
-                "hotkey/tape_write.ahk"]
-        args += lst
 
-        ahk = subprocess.Popen(args, stdout=subprocess.PIPE)
-        ahk.wait()
+        if self.virtual:
+            for idx, char in enumerate(lst):
+                self.tape[idx] = char
+
+            self.tape_loc = tape_loc
+
+        else:
+            self.show_slide(tape_loc)
+            args = ["C:/Program Files/AutoHotkey/AutoHotkeyU64.exe",
+                    "hotkey/tape_write.ahk"]
+            args += lst
+
+            ahk = subprocess.Popen(args, stdout=subprocess.PIPE)
+            ahk.wait()
 
     # Reads a tape and returns its raw output
     def tape_read_raw(self):
-        ahk = subprocess.Popen(["C:/Program Files/AutoHotkey/AutoHotkeyU64.exe",
-                                "hotkey/tape_read.ahk"], stdout=subprocess.PIPE)
-        ahk.wait()
-        out = ahk.stdout.read().decode()
+        if self.virtual:
+            out = ''.join(self.tape)
+
+        else:
+            ahk = subprocess.Popen(["C:/Program Files/AutoHotkey/AutoHotkeyU64.exe",
+                                    "hotkey/tape_read.ahk"], stdout=subprocess.PIPE)
+            ahk.wait()
+            out = ahk.stdout.read().decode()
 
         return out
 
     def execute(self):
-        ahk_start = subprocess.Popen(["C:/Program Files/AutoHotkey/AutoHotkeyU64.exe",
-                                      "hotkey/toggle_exec.ahk"])
-        ahk_start.wait()
 
-        ahk_run = subprocess.Popen(["C:/Program Files/AutoHotkey/AutoHotkeyU64.exe",
-                                    "hotkey/cpu_cycle.ahk"])
-        ahk_run.wait()
+        if self.virtual:
+            if self.tape_loc == self.ADD:
+                res = int(self.tape[0]) + int(self.tape[1]) + int(self.tape[2])
 
-        ahk_teardown = subprocess.Popen(["C:/Program Files/AutoHotkey/AutoHotkeyU64.exe",
-                                         "hotkey/toggle_exec.ahk", "1"])
-        ahk_teardown.wait()
+                if res > 1:
+                    self.tape[3] = '1'
+                    self.tape[4] = str(res - 2)[0]
+                else:
+                    self.tape[3] = '0'
+                    self.tape[4] = str(res)[0]
+
+            elif self.tape_loc == self.SUB:
+                res = int(self.tape[1]) - int(self.tape[0]) - int(self.tape[2])
+
+                if res < 0:
+                    self.tape[4] = '1'
+                    self.tape[3] = str(res + 2)[0]
+                else:
+                    self.tape[4] = '0'
+                    self.tape[3] = str(res)[0]
+
+        else:
+            ahk_start = subprocess.Popen(["C:/Program Files/AutoHotkey/AutoHotkeyU64.exe",
+                                        "hotkey/toggle_exec.ahk"])
+            ahk_start.wait()
+
+            ahk_run = subprocess.Popen(["C:/Program Files/AutoHotkey/AutoHotkeyU64.exe",
+                                        "hotkey/cpu_cycle.ahk"])
+            ahk_run.wait()
+
+            ahk_teardown = subprocess.Popen(["C:/Program Files/AutoHotkey/AutoHotkeyU64.exe",
+                                            "hotkey/toggle_exec.ahk", "1"])
+            ahk_teardown.wait()
 
     # Need to find the delete function for slides
     def teardown(self):
