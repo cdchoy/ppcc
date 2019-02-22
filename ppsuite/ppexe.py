@@ -49,7 +49,7 @@ class PPEXE(object):
 
     def add(self,dst,src):
         if self.is_int(src):
-            src_val = src
+            src_val = int(src)
         else:
             src_val = self.api.reg_read(src)
 
@@ -89,7 +89,7 @@ class PPEXE(object):
 
     def sub(self,dst,src):
         if self.is_int(src):
-            src_val = src
+            src_val = int(src)
         else:
             src_val = self.api.reg_read(src)
 
