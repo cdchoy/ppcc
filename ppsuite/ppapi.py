@@ -284,7 +284,7 @@ class PPAPI:
             if slide_num == self.MEM_0:
                 txt = self.mem_0[mem_loc_real]
             else:
-                txt = self.mem_1[mem_loc_real] = txt
+                txt = self.mem_1[mem_loc_real]
 
         else:
             slide = self.show_slide(slide_num)
@@ -299,7 +299,7 @@ class PPAPI:
     # Reads a binary string from a register, 
     # then converts it to an int
     def mem_read(self, mem_loc):
-        raw = self.reg_read_raw(mem_loc)
+        raw = self.mem_read_raw(mem_loc)
         no_hex_prefix = raw[2:]
         val = int(no_hex_prefix, 16)
 
