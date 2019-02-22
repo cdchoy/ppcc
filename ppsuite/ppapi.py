@@ -4,7 +4,17 @@ import win32com.client  # todo rm. pres is initialized in ppexe
 
 class PPAPI:
     def __init__(self, pres):
-        self.pres = pres
+
+        if pres == None:
+            self.regs = []
+            self.mem_0 = []
+            self.mem_1 = []
+            self.instr = []
+            self.tape = []
+            self.virtual = True
+        else pres != None:
+            self.pres = pres
+            self.virtual = False
 
         self.MEM_0 = 1
         self.MEM_1 = 2
@@ -50,76 +60,112 @@ class PPAPI:
 
     #init instr cache page
     def init_inst_cache(self):
-        self.pres.Slides.Add(self.INSTR_CACHE, 12)
-        self.show_slide(self.INSTR_CACHE)
 
-        slide = self.pres.Slides(self.INSTR_CACHE)
+        if self.virtual:
+            self.instr.append("1")
 
-        slide.Shapes.AddTextbox(Orientation=0x1,
-                                Left=100,
-                                Top=20,
-                                Width=300,
-                                Height=30)
-        slide.Shapes(1).TextFrame.TextRange.Text = "1"
+        else:
+            self.pres.Slides.Add(self.INSTR_CACHE, 12)
+            self.show_slide(self.INSTR_CACHE)
+            slide = self.pres.Slides(self.INSTR_CACHE)
+
+            slide.Shapes.AddTextbox(Orientation=0x1,
+                                    Left=100,
+                                    Top=20,
+                                    Width=300,
+                                    Height=30)
+            slide.Shapes(1).TextFrame.TextRange.Text = "1"
 
     #loads program from ppasm file
     def load_ppasm(self, file_path):
-        slide = self.show_slide(self.INSTR_CACHE)
-        shape_num = 2
+        if not self.virtual:
+            slide = self.show_slide(self.INSTR_CACHE)
+    
+        line = 2
 
         with open(file_path, 'r') as f:
             for asm_line in f:
-                if slide.Shapes.Count < shape_num:
+                txt = asm_line.split('\t')[2]
+
+                if virtual:
+                    self.instr.append(txt)
+
+                else:
                     slide.Shapes.AddTextbox(Orientation=0x1,
-                                                        Left=100,
-                                                        Top=20 * shape_num,
-                                                        Width=300,
-                                                        Height=30)
-                slide.Shapes(shape_num).TextFrame.TextRange.Text = asm_line.split('\t')[2]
-                shape_num += 1
+                                            Left=100,
+                                            Top=20 * line,
+                                            Width=300,
+                                            Height=30)
+                    slide.Shapes(shape_num).TextFrame.TextRange.Text = txt
+
+                line += 1
 
     #returns next instr
     def get_next_instr(self):
-        self.show_slide(self.INSTR_CACHE)
+        if self.virtual:
+            ip_num = int(self.instr[0])
+            self.instr[0] = str(ip_num + 1)
 
-        instr_cache_slide = self.pres.Slides(self.INSTR_CACHE)
-        ip_num = int(instr_cache_slide.Shapes(1).TextFrame.TextRange.Text)
-        instr_cache_slide.Shapes(1).TextFrame.TextRange.Text = str(ip_num + 1)
+            return self.instr[ip_num]
 
-        return instr_cache_slide.Shapes(ip_num + 1).TextFrame.TextRange.Text
+        else:
+            self.show_slide(self.INSTR_CACHE)
+
+            instr_cache_slide = self.pres.Slides(self.INSTR_CACHE)
+            ip_num = int(instr_cache_slide.Shapes(1).TextFrame.TextRange.Text)
+            instr_cache_slide.Shapes(1).TextFrame.TextRange.Text = str(ip_num + 1)
+
+            return instr_cache_slide.Shapes(ip_num + 1).TextFrame.TextRange.Text
 
     #updates instruction counter
     def update_instr_ptr(self, new_num):
-        slide = self.show_slide(self.INSTR_CACHE)
-        slide.Shapes(1).TextFrame.TextRange.Text = str(int(new_num) + 1)
+        if self.virtual:
+            self.instr[0] = str(int(new_num) + 1)
+
+        else:
+            slide = self.show_slide(self.INSTR_CACHE)
+            slide.Shapes(1).TextFrame.TextRange.Text = str(int(new_num) + 1)
 
     # Initializes the register page
     def init_register(self):
-        self.pres.Slides.Add(self.REG, 12)
 
-        slide = self.show_slide(self.REG)
+        if not self.virtual:
+            self.pres.Slides.Add(self.REG, 12)
+            slide = self.show_slide(self.REG)
 
         for reg_num in range(1, 10):
-            slide.Shapes.AddTextbox(Orientation=0x1,
-                                    Left=100,
-                                    Top=50 * reg_num,
-                                    Width=300,
-                                    Height=30)
-
-            textframe = slide.Shapes(reg_num).TextFrame
             if (reg_num == (self.reg_table['SP'] + 1)):
-                textframe.TextRange.Text = "X{}: 11111111".format(reg_num - 1)
+                txt =  "X{}: 11111111".format(reg_num - 1)
             else:
-                textframe.TextRange.Text = "X{}: 00000000".format(reg_num - 1)
+                txt =  "X{}: 00000000".format(reg_num - 1)
+            
+            if self.virtual:
+                self.regs.append(txt)
+
+            else:
+                slide.Shapes.AddTextbox(Orientation=0x1,
+                                        Left=100,
+                                        Top=50 * reg_num,
+                                        Width=300,
+                                        Height=30)
+
+                textframe = slide.Shapes(reg_num).TextFrame
+                textframe.TextRange.Text = txt
 
     # Writes a string to a register
     def reg_write_raw(self, reg_name, val):
         reg_num = self.reg_table[reg_name]
 
-        slide = self.show_slide(self.REG)
-        textframe = slide.Shapes(reg_num + 1).TextFrame
+        txt = "X{}: {}".format(reg_num,val)
 
-        textframe.TextRange.Text = "X{}: {}".format(reg_num,val)
+        if self.virtual:
+            self.regs[reg_num] = txt
+
+        else:
+            slide = self.show_slide(self.REG)
+            textframe = slide.Shapes(reg_num + 1).TextFrame
+
+            textframe.TextRange.Text = txt
 
     # Converts a value to binary string, then writes to a register
     def reg_write(self, reg_name, val):
@@ -130,11 +176,17 @@ class PPAPI:
     def reg_read_raw(self, reg_name):
         reg_num = self.reg_table[reg_name]
 
-        slide = self.show_slide(self.REG)
-        textframe = slide.Shapes(reg_num + 1).TextFrame
+        if self.virtual:
+            txt = self.regs[reg_num]
+
+        else:
+            slide = self.show_slide(self.REG)
+            textframe = slide.Shapes(reg_num + 1).TextFrame
+
+            txt = textframe.TextRange.Text[strip_len:]
 
         strip_len = len(str(reg_num)) + 3
-        val = textframe.TextRange.Text[strip_len:]
+        val = txt[strip_len:]
 
         return val
 
@@ -148,33 +200,43 @@ class PPAPI:
 
     # Initializes the memory page
     def init_mem(self):
-        self.pres.Slides.Add(self.MEM_0, 12)
-        self.pres.Slides.Add(self.MEM_1, 12)
-        slide_0 = self.show_slide(self.MEM_0)
-        slide_1 = self.pres.Slides(self.MEM_1)
+
+        if not self.virtual:
+            self.pres.Slides.Add(self.MEM_0, 12)
+            self.pres.Slides.Add(self.MEM_1, 12)
+            slide_0 = self.show_slide(self.MEM_0)
+            slide_1 = self.pres.Slides(self.MEM_1)
 
         for reg_num in range(1, 129):
             x = 15 + ((reg_num - 1) % 16) * 42
             y = 40 + 57 * ((reg_num - 1) // 16)
 
-            slide_0.Shapes.AddTextbox(Orientation=0x1,
-                                      Left=x,
-                                      Top=y,
-                                      Width=45,
-                                      Height=18)
+            txt_0 = "{}: {}".format(hex(reg_num - 1), hex(0))
+            txt_1 = "{}: {}".format(hex(reg_num - 1), hex(0))
 
-            slide_1.Shapes.AddTextbox(Orientation=0x1,
-                                      Left=x,
-                                      Top=y,
-                                      Width=45,
-                                      Height=18)
+            if self.virtual:
+                mem_0.append(txt_0)
+                mem_1.append(txt_1)
 
-            textframe_0 = slide_0.Shapes(reg_num).TextFrame
-            textframe_0.TextRange.Font.Size = 10
-            textframe_0.TextRange.Text = "{}: {}".format(hex(reg_num - 1), hex(0))
-            textframe_1 = slide_1.Shapes(reg_num).TextFrame
-            textframe_1.TextRange.Font.Size = 10
-            textframe_1.TextRange.Text = "{}: {}".format(hex(reg_num - 1 + 128), hex(0))
+            else:
+                slide_0.Shapes.AddTextbox(Orientation=0x1,
+                                        Left=x,
+                                        Top=y,
+                                        Width=45,
+                                        Height=18)
+
+                slide_1.Shapes.AddTextbox(Orientation=0x1,
+                                        Left=x,
+                                        Top=y,
+                                        Width=45,
+                                        Height=18)
+
+                textframe_0 = slide_0.Shapes(reg_num).TextFrame
+                textframe_0.TextRange.Font.Size = 10
+                textframe_0.TextRange.Text = txt_0
+                textframe_1 = slide_1.Shapes(reg_num).TextFrame
+                textframe_1.TextRange.Font.Size = 10
+                textframe_1.TextRange.Text = txt_1
 
     # Writes a string to memory
     def mem_write_raw(self, mem_loc, val):
@@ -185,10 +247,19 @@ class PPAPI:
             mem_loc_real = mem_loc - 128
             slide_num = self.MEM_1
 
-        slide = self.show_slide(slide_num)
-        textframe = slide.Shapes(mem_loc_real + 1).TextFrame
+        txt = "{}: {}".format(hex(mem_loc), val)
 
-        textframe.TextRange.Text = "{}: {}".format(hex(mem_loc), val)
+        if self.virtual:
+            if slide_num == self.MEM_0:
+                self.mem_0[mem_loc_real] = txt
+            else:
+                self.mem_1[mem_loc_real] = txt
+
+        else:
+            slide = self.show_slide(slide_num)
+            textframe = slide.Shapes(mem_loc_real + 1).TextFrame
+
+            textframe.TextRange.Text = txt
 
     # Converts a value to hex string, then writes to memory
     def mem_write(self, mem_loc, val):
@@ -204,11 +275,19 @@ class PPAPI:
             mem_loc_real = mem_loc - 128
             slide_num = self.MEM_1
 
-        slide = self.show_slide(slide_num)
-        textframe = slide.Shapes(mem_loc_real + 1).TextFrame
+        if self.virtual:
+            if slide_num == self.MEM_0:
+                txt = self.mem_0[mem_loc_real]
+            else:
+                txt = self.mem_1[mem_loc_real] = txt
+
+        else:
+            slide = self.show_slide(slide_num)
+            textframe = slide.Shapes(mem_loc_real + 1).TextFrame
+            txt = textframe.TextRange.Text
 
         strip_len = len(hex(mem_loc)) + 2
-        val = textframe.TextRange.Text[strip_len:]
+        val = txt[strip_len:]
 
         return val
 
