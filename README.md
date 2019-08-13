@@ -1,7 +1,7 @@
 # PPSuite
 Presenting the future of software development: Powerpoint.  
 
-Uncommon Hacks Hackathon 2019 Submission
+Uncommon Hacks Hackathon 2019 Submission.   
 Awarded "Most Technically Impressive 2019"
 
 ## Abstract
