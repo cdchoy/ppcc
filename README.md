@@ -69,8 +69,9 @@ $ python3 ppsuite/ppexe <some .ppasm file>
 
 * Microsoft Powerpoint
 * Python 3.7
-* AutoHotKey (1920x1080 aspect ratio)
+* AutoHotKey
 * win32COM
+* 1920x1080 aspect ratio (we wish we were joking; all the input values are hardcoded to this size)
 
 ## Acknowledgements
 
