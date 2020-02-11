@@ -57,6 +57,14 @@ Next, run the program with
 $ python3 ppsuite/ppexe <some .ppasm file>
 ```
 
+### Virtualization
+
+Want to develop on the PPCPU but don't meet the dependency requirements? There's a virtual machine option in the PPAPI class that should be able to run a virtual PPCPU with basically no dependencies. It'll run everything on a PPCPU simulator instead of a real powerpoint. (We know it kinda defeats the purpose, but 2 second runtime makes testing significantly easier than a 5 minute one.)
+
+To do so, you'll need to make a `PPEXE` object with the `ppt` specified as `None`. Then, you'll need to update the `if __name__ == "__main__"` section in `ppexe.py`. Then, you should be able to remove the win32* dependencies as well as anything to do with window management (just try removing stuff until it breaks).
+
+TODO- make virtualization usage more streamlined
+
 ## Challenges
 
 1) We had no a priori knowledge on how Turing Machines or Punch Cards actually worked...
