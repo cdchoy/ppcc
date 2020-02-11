@@ -10,7 +10,6 @@ loop %0% {
 
     ; Write to the cell
     if (i =  _) {
-    FileAppend, _, *
         MouseMove, 889, 697, 0
         Click
     }
@@ -25,7 +24,6 @@ loop %0% {
         Click
     }
     if (i = 2) {
-    FileAppend, 2, *
         MouseMove, 889, 780, 0
         Click
     }
