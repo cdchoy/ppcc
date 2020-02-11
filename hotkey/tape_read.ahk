@@ -16,7 +16,7 @@ Loop, 8 {
     }
     PixelGetColor, color_var, 946, 835 
     if (color_var == 0x317ded || color_var == 0x2444d1) {
-        value = 0
+        value = 3
     }
     PixelGetColor, color_var, 1006, 839 
     if (color_var == 0x317ded || color_var == 0x2444d1) {

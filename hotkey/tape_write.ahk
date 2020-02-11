@@ -13,7 +13,7 @@ loop %0% {
         MouseMove, 889, 697, 0
         Click
     }
-    if (i = 0) {
+    if (i = 3) {
         ; Had to replace 0 with 3 because this stupid
         ; language is dumb with comparisons to 0
         MouseMove, 889, 721, 0

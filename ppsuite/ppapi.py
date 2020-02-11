@@ -306,21 +306,22 @@ class PPAPI:
         return val
 
     def tape_write_raw(self, tape_loc, val):
-        lst = list(val)
-
         print("Writing to tape: " + val)
 
         if self.virtual:
-            for idx, char in enumerate(lst):
+            for idx, char in enumerate(val):
                 self.tape[idx] = char
 
             self.tape_loc = tape_loc
 
         else:
             self.show_slide(tape_loc)
+
+            val = val.replace("0", "3")
+
             args = ["C:/Program Files/AutoHotkey/AutoHotkeyU64.exe",
                     "hotkey/tape_write.ahk"]
-            args += lst
+            args += list(val)
 
             ahk = subprocess.Popen(args, stdout=subprocess.PIPE)
             ahk.wait()
@@ -335,6 +336,8 @@ class PPAPI:
                                     "hotkey/tape_read.ahk"], stdout=subprocess.PIPE)
             ahk.wait()
             out = ahk.stdout.read().decode()
+
+            out = out.replace("3", "0")
 
         print("Read from tape: " + out)
 
