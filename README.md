@@ -45,10 +45,17 @@ Next, we decode through the instructions using PPEXE, a Python executor that fun
 
 ## Usage
 
-To use our PPSuite, a user will need to write a C file, say foo.c, and then the following commands:
+To use our PPSuite, a user will need to write a C file, say foo.c, and then compile it to PPASM with:
+```
+$ python3 ppsuite/ppcc <some c file>
+```
 
-$ ppcc foo.c  
-$ ppexe foo.ppasm  
+Next, open the PPCPU PowerPoint. Make sure your default screen is 1920x1080, or else the screen detection and autohotkey input won't work (TODO- detect resolution and auto adjust)
+
+Next, run the program with
+```
+$ python3 ppsuite/ppexe <some .ppasm file>
+```
 
 ## Challenges
 
