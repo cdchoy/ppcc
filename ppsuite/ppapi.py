@@ -308,6 +308,8 @@ class PPAPI:
     def tape_write_raw(self, tape_loc, val):
         lst = list(val)
 
+        print("Writing to tape: " + val)
+
         if self.virtual:
             for idx, char in enumerate(lst):
                 self.tape[idx] = char
@@ -333,6 +335,8 @@ class PPAPI:
                                     "hotkey/tape_read.ahk"], stdout=subprocess.PIPE)
             ahk.wait()
             out = ahk.stdout.read().decode()
+
+        print("Read from tape: " + out)
 
         return out
 

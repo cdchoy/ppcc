@@ -241,7 +241,7 @@ class PPEXE(object):
             instr = self.api.get_next_instr()
             args = instr.split(' ')
 
-            print("Processing: {}".format(instr))
+            print("Processing: {}".format(instr)[:-1])
 
             # Dispatch Table
             if args[0] == 'mov':
