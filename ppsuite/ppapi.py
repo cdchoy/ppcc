@@ -99,7 +99,7 @@ class PPAPI:
                                             Top=20 * line,
                                             Width=300,
                                             Height=30)
-                    slide.Shapes(shape_num).TextFrame.TextRange.Text = txt
+                    slide.Shapes(line).TextFrame.TextRange.Text = txt
 
                 line += 1
 
@@ -186,7 +186,7 @@ class PPAPI:
             slide = self.show_slide(self.REG)
             textframe = slide.Shapes(reg_num + 1).TextFrame
 
-            txt = textframe.TextRange.Text[strip_len:]
+            txt = textframe.TextRange.Text
 
         strip_len = len(str(reg_num)) + 3
         val = txt[strip_len:]
