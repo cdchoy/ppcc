@@ -1,14 +1,14 @@
 # PPSuite
 Presenting the future of software development: Powerpoint.  
 
-Uncommon Hacks Hackathon 2019 Submission. See the Devpost project here: https://devpost.com/software/ppcc.
+[Uncommon Hacks Hackathon](https://uncommonhacks.com/) 2019 Submission. See the Devpost project here: https://devpost.com/software/ppcc.
 Awarded "Most Technically Impressive 2019"
 
 ## Abstract
 
 What if you could execute your C code in Powerpoint?
 
-At Carnegie Mellon's 11th annual SIGBOVIK in 2017, Tom Wildenhain unveiled the [Powerpoint Turing Machine](https://www.andrew.cmu.edu/user/twildenh/PowerPointTM/Paper.pdf) (aka PPTXTM), a Turing Machine that could function entirely in Powerpoint. The implications? Groundbreaking. The usability? Lacking. To operate the PPTXTM, one needs to write executable punch cards; a technique made obsolete in the **1960s**.
+At Carnegie Mellon's 11th annual [SIGBOVIK](http://sigbovik.org/) in 2017, Tom Wildenhain unveiled the [Powerpoint Turing Machine](https://www.andrew.cmu.edu/user/twildenh/PowerPointTM/Paper.pdf) (aka PPTXTM), a [Turing Machine](https://en.wikipedia.org/wiki/Turing_machine) that could function entirely in Powerpoint. The implications? Groundbreaking. The usability? Lacking. To operate the PPTXTM, one needs to write executable punch cards; a technique made obsolete in the **1960s**.
 
 And so in 2019, we are proud to introduce the PPSuite, a collection of software engineered to greatly improve your Powerpoint programming experience.
 
